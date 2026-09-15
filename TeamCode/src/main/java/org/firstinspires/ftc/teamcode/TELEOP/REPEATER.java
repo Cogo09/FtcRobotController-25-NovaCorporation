@@ -12,7 +12,8 @@ import org.gentrifiedApps.gentrifiedAppsUtil.teleopTracker.TeleOpTrackerOpMode;
 public final class REPEATER {
 
     static String name = "Launch";
-    static Driver driver = new Driver("frontLeftMotor", "frontRightMotor", "backLeftMotor", "backRightMotor", DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD);
+    static Driver driver = new Driver();
+
 
     static boolean isEnabled = true;
 
@@ -26,10 +27,12 @@ public final class REPEATER {
                 .setFlavor(flavor)
                 .build();
     }
+    //"frontLeftMotor", "frontRightMotor", "backLeftMotor", "backRightMotor", DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD
 
     @OpModeRegistrar
     public static void register(OpModeManager manager) {
         if (!isEnabled) return;
+        driver.setFrontLeftName("frontLeftMotor").setFrontRightName("frontRightMotor").setBackLeftName("backLeftMotor").setBackRightName("backRightMotor").reverseFrontLeft();
         manager.register(metaForClass(TeleOpCopyRunner.class, OpModeMeta.Flavor.AUTONOMOUS), new TeleOpCopyRunner(name, driver));
         manager.register(metaForClass(TeleOpTrackerOpMode.class, OpModeMeta.Flavor.TELEOP), new TeleOpTrackerOpMode(name, driver));
     }}

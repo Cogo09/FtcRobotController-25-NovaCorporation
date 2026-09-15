@@ -13,19 +13,21 @@ import org.gentrifiedApps.gentrifiedAppsUtil.heatseeker.Driver;
 
 public final class ConfigRegistrar {
 
-    static ConfigMaker config = new ConfigMaker("Das ROBOTO")
+    static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
             .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 1", 1)
             .addCamera("Webcam 1","UC684")
             .addMotor("frontLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
             .addMotor("backLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("frontRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 2)
             .addMotor("backRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 3)
-            .addMotor("intakeL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 2)
-            .addMotor("intakeR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 3)
-            .addMotor("shooterL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
-            .addMotor("shooterR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
-            .addDevice("safetyswitch", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.DeviceType.Servo, 0)
-            .addDevice("imu", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BNO055_IMU, 0);
+//            .addMotor("intakeL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 2)
+//            .addMotor("intakeR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 3)
+//            .addMotor("shooterL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
+//            .addMotor("shooterR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
+            .addDevice("swivelL", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 0)
+            .addDevice("hood", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 1)
+            .addDevice("swivelR", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 2)
+            .addDevice("imu", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BHI260_IMU, 0);
 
 
     static boolean isEnabled = true;
@@ -45,8 +47,10 @@ public final class ConfigRegistrar {
     @OpModeRegistrar
     public static void register(OpModeManager manager) {
         if (!isEnabled) return;
+        Driver driver = new Driver();
+        driver.setFrontLeftName("frontLeftMotor").setFrontRightName("frontRightMotor").setBackLeftName("backLeftMotor").setBackRightName("backRightMotor").reverseFrontLeft();
         manager.register(metaForClass(ConfigCreator.class), new ConfigCreator(config));
-        manager.register(metaForClass(DriftTunerOpMode.class), new DriftTunerOpMode(new Driver("frontLeftMotor", "frontRightMotor", "backLeftMotor", "backRightMotor", DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD), 3));
+        manager.register(metaForClass(DriftTunerOpMode.class), new DriftTunerOpMode(driver, 3));
 
     }
 }
