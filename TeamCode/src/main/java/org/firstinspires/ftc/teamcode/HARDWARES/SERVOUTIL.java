@@ -6,8 +6,8 @@ import com.acmerobotics.dashboard.config.Config;
 public class SERVOUTIL {
 
 
-    public static double safetyon = 100;
+    public static double swivelon = 100;
 
-    public static double safetyoff = 0;
+    public static double swiveloff = 0;
 
 }
