@@ -59,6 +59,9 @@ public class Cluster {
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hwMap.get(WebcamName.class, "Webcam 1"));
         builder.addProcessor(aprilTag);
+        builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
+        //builder.setCameraResolution(Size cameraResolution = new Size(640, 480));
+        aprilTag.setDecimation(100);
         visionPortal = builder.build();
     }
     public void sendToDash(){
