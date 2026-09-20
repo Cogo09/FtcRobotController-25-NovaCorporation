@@ -72,7 +72,7 @@ public class Cluster {
         return range.loadCache();
     }
 
-    private double getRange(){
+    public double getRange(){
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             if (detection instanceof AprilTagClusterDetection){

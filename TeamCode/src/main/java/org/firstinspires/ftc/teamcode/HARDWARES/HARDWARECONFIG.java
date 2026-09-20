@@ -26,8 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.SUBS.Cluster;
-import org.firstinspires.ftc.teamcode.SUBS.PowerSUB;
-import org.firstinspires.ftc.teamcode.SUBS.SERVOSUB;
+import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
@@ -45,8 +44,7 @@ public class HARDWARECONFIG {
     boolean slowmode = false;
     Telemetry telemetry = null;
     LinearOpMode opMode = null;
-    public SERVOSUB servosub = null;
-    public PowerSUB powersub = null;
+    public SHOOTERSUB shootersub = null;
     //public org.firstinspires.ftc.teamcode.SUBS.ARMSUB armSub = null;
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
@@ -79,7 +77,8 @@ public class HARDWARECONFIG {
         initrobot(hwmap, om, auto);
 
         //powersub = new PowerSUB(hwmap);
-        servosub = new SERVOSUB(hwmap);
+        shootersub = new SHOOTERSUB();
+        shootersub.init(hwmap);
 
     }
 
@@ -121,6 +120,7 @@ public class HARDWARECONFIG {
 
 
 
+
 //
 
         elapsedTime = new ElapsedTime();
@@ -142,6 +142,9 @@ public class HARDWARECONFIG {
         } else if (heading > -0.6) {
             indicator = 0;
         }
+    }
+    public double getrange() {
+        return cluster.getRange();
     }
 
 
@@ -211,11 +214,10 @@ public class HARDWARECONFIG {
         } else {
             indicator = 0;
         }
-        cluster.RANGE();
-        if (opMode.gamepad1.left_bumper){
-            servosub.Swivelon();
-
+        if (opMode.gamepad1.dpad_up) {
+          shootersub.shootlock(getrange());
         }
+
 
 
 
@@ -279,8 +281,7 @@ public class HARDWARECONFIG {
         backRightMotor.setPower(backRightPower);
 
         if (imc.hasMovedOnInit()){
-            servosub.update();
-            //powersub.update();
+            shootersub.update();
 
         }
         //armSub.update();
