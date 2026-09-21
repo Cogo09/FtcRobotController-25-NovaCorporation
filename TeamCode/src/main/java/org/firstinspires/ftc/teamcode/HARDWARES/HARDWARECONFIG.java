@@ -159,6 +159,8 @@ public class HARDWARECONFIG {
         telemetry.addData("x", x);
         telemetry.addData("y", y);
         telemetry.addData("indicator", indicator);
+        telemetry.addData("roll",cluster.getRange());
+        shootersub.telemetry(telemetry);
         //powersub.telemetry(telemetry);
 
         telemetry.update();
@@ -215,7 +217,10 @@ public class HARDWARECONFIG {
             indicator = 0;
         }
         if (opMode.gamepad1.dpad_up) {
-          shootersub.shootlock(getrange());
+          shootersub.shootlock(shootersub.val);
+        }
+        if (opMode.gamepad1.dpad_down){
+            shootersub.shootlock(shootersub.val);
         }
 
 

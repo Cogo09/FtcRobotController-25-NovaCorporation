@@ -15,7 +15,7 @@ public final class ConfigRegistrar {
 
     static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
             .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 1", 1)
-            .addCamera("Webcam 1","67A55BAF")
+            .addCamera("Webcam 1","UC684")
             .addMotor("frontLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
             .addMotor("backLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("frontRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 2)
@@ -24,10 +24,14 @@ public final class ConfigRegistrar {
 //            .addMotor("intakeR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 3)
 //            .addMotor("shooterL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
 //            .addMotor("shooterR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
-            .addDevice("swivelL", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 0)
-            .addDevice("hood", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 1)
-            .addDevice("swivelR", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 2)
+            .addDevice("turretleft", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 0)
+            .addDevice("turretvert", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 1)
+            .addDevice("turretright", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 2)
+            .addDevice("turretleftEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,0)
+            .addDevice("turretrightEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,1)
+            .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2)
             .addDevice("imu", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BHI260_IMU, 0);
+
 
 
     static boolean isEnabled = true;
