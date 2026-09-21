@@ -39,6 +39,7 @@ public class SHOOTERSUB {
     public void shootlock(double target ){
         val = pidfController.calculate(turretleft.getEncoderPosition(), target);
         turretleft.setPosition(val);
+        turretright.setPosition(val);
 
     }
 
