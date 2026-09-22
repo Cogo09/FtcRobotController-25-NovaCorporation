@@ -27,7 +27,7 @@ public final class ConfigRegistrar {
             .addDevice("turretleft", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 0)
             .addDevice("turretvert", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 1)
             .addDevice("turretright", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.Servo, 2)
-            .addDevice("turretleftEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,0)
+            .addDevice("turretleftEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,0) //! good job here (i have no clue if the ports are correct)
             .addDevice("turretrightEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,1)
             .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2)
             .addDevice("imu", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BHI260_IMU, 0);

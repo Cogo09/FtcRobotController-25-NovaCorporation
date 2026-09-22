@@ -27,7 +27,7 @@ public class SHOOTERSUB {
     private AxonServo turretleft;
     private AxonServo turretright;
     private AxonServo turretvert;
-    Cluster cluster = new Cluster();
+    Cluster cluster = new Cluster();//! remove, unnecessary
     //MOTORS HERE LATER
     public void init(HardwareMap hwmap){
         turretleft = new AxonServo(hwmap, "turretleft");
@@ -37,10 +37,10 @@ public class SHOOTERSUB {
 
 
     PIDFController pidfController = new PIDFController(p, i ,d, f);
-    public double val = 0;
+    public double val = 0; //! this should be in shootlock as we dont want it to move if it has no target
 
 
-    public void shootlock(double target){
+    public void shootlock(double target){ //! cluster.range should get passed in as target
         val = pidfController.calculate(turretleft.getEncoderPosition(), target);
         turretleft.setPosition(val);
         turretright.setPosition(val);
