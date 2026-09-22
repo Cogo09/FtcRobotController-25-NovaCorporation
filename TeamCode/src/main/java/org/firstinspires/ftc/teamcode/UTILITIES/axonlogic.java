@@ -104,6 +104,7 @@ public class axonlogic {
 //            setAlgo(this.algorithm.reversed());
 //        }
 //    }
+    //
 
     private AnalogEncoder initAEncoder(HardwareMap hw) {
         return AnalogEncoder.axon(hw, name + "Encoder");
