@@ -217,10 +217,10 @@ public class HARDWARECONFIG {
             indicator = 0;
         }
         if (opMode.gamepad1.dpad_up) {
-          shootersub.shootlock(shootersub.val);
+          shootersub.shootlock(getrange());
         }
         if (opMode.gamepad1.dpad_down){
-            shootersub.shootlock(shootersub.val);
+            shootersub.shootlock(getrange());
         }
 
 
