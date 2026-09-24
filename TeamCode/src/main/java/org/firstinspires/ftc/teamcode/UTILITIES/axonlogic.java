@@ -29,7 +29,7 @@ public class axonlogic {
     public axonlogic(HardwareMap hw, String name) {
         this.name = name;
         this.encoder = initAEncoder(hw);
-        this.servo = hw.get(CRServo.class, name); //! review this
+        this.servo = hw.get(CRServo.class, name);
 
     }
 

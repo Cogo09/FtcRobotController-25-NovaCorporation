@@ -24,23 +24,22 @@ import org.opencv.core.Range;
 import java.util.List;
 
 public class SHOOTERSUB {
-    private AxonServo turretleft;
-    private AxonServo turretright;
-    private AxonServo turretvert;
-    Cluster cluster = new Cluster();//! remove, unnecessary
+    private axonlogic turretleft;
+    private axonlogic turretright;
+    private axonlogic turretvert;
     //MOTORS HERE LATER
     public void init(HardwareMap hwmap){
-        turretleft = new AxonServo(hwmap, "turretleft");
-        turretright = new AxonServo(hwmap, "turretright");
-        turretvert = new AxonServo(hwmap, "turretvert");
+        turretleft = new axonlogic(hwmap, "turretleft");
+        turretright = new axonlogic(hwmap, "turretright");
+        turretvert = new axonlogic(hwmap, "turretvert");
     }
 
 
     PIDFController pidfController = new PIDFController(p, i ,d, f);
-    public double val = 0; //! this should be in shootlock as we dont want it to move if it has no target
 
 
     public void shootlock(double target){ //! cluster.range should get passed in as target
+        double val = 0;
         val = pidfController.calculate(turretleft.getEncoderPosition(), target);
         turretleft.setPosition(val);
         turretright.setPosition(val);
@@ -55,7 +54,6 @@ public class SHOOTERSUB {
         telemetry.addData("turretleft", turretleft.getEncoderPositionRegular());
         telemetry.addData("turretright", turretright.getEncoderPosition());
         telemetry.addData("turretvert", turretvert.getEncoderPosition());
-        telemetry.addData("val",val);
 
     }
 
