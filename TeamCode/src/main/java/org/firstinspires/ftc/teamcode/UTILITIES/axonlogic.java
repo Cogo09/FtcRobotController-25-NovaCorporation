@@ -55,8 +55,8 @@ public class axonlogic {
     }
 
     public void setPosition(double degree) {
-        servo.setPower(degree);
-    } // rename this to its actual usage
+        servo.setPower(degree); //! use Range.clamp(degree, min(-1), max(1)) to clamp it to servo range
+    } //! rename this to its actual usage
 
 //    public void setPositionCheck(double degree) {
 //        servo.setPower(degree);
