@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.UTILITIES;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.gentrifiedApps.gentrifiedAppsUtil.classes.analogEncoder.AnalogEncoder;
@@ -54,7 +55,8 @@ public class axonlogic {
         telemetry.addData(name + " aEncoder", "%.1f", this.getEncoderPosition());
     }
 
-    public void setPosition(double degree) {
+    public void setpower(double degree) {
+        degree = Range.clip(degree, -1, 1);
         servo.setPower(degree); //! use Range.clamp(degree, min(-1), max(1)) to clamp it to servo range
     } //! rename this to its actual usage
 

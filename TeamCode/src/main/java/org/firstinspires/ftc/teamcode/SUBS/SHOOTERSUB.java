@@ -41,8 +41,8 @@ public class SHOOTERSUB {
     public void shootlock(double target){ //! cluster.range should get passed in as target
         double val = 0;
         val = pidfController.calculate(turretleft.getEncoderPosition(), target);
-        turretleft.setPosition(val);
-        turretright.setPosition(val);
+        turretleft.setpower(val);
+        turretright.setpower(val);
     }
 
 

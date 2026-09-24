@@ -222,6 +222,9 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.dpad_down){
             shootersub.shootlock(0);
         }
+        if (opMode.gamepad1.dpad_left) {
+            shootersub.shootlock(1);
+        }
 
 
 
