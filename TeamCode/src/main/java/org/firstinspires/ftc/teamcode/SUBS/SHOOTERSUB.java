@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.AXONS.PIDFController;
 import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
-//import org.gentrifiedApps.gentrifiedAppsUtil.hardware.servo.AxonServo;
+import org.gentrifiedApps.gentrifiedAppsUtil.hardware.servo.AxonServo;
 
 import org.gentrifiedApps.gentrifiedAppsUtil.hardware.servo.AxonServo;
 import org.opencv.core.Range;
@@ -28,6 +28,10 @@ public class SHOOTERSUB {
     private axonlogic turretright;
     private axonlogic turretvert;
     //MOTORS HERE LATER
+
+    private boolean isHoldingPosition = false;
+    private double targetPosition = 0;
+
     public void init(HardwareMap hwmap){
         turretleft = new axonlogic(hwmap, "turretleft");
         turretright = new axonlogic(hwmap, "turretright");
@@ -39,21 +43,36 @@ public class SHOOTERSUB {
 
 
     public void shootlock(double target){ //! cluster.range should get passed in as target
-        double val = 0;
-        val = pidfController.calculate(turretleft.getEncoderPosition(), target);
-        turretleft.setpower(val);
-        turretright.setpower(val);
+        this.targetPosition = target;
+        isHoldingPosition = true;
+    }
+    public double getcurrentPosition(){
+        return turretleft.getEncoderPosition();
     }
 
 
     public void update(){
+        if (isHoldingPosition) {
+            // Calculate power using your PIDF controller
+            // (Make sure the argument order matches your PIDFController class: target, current)
+            double val = pidfController.calculate(targetPosition, turretleft.getEncoderPosition());
+            if (Double.isNaN(val)){
+                val = 0.0;
+            }
 
+            // Send power to the left turret servo
+            turretleft.setpower(val);
 
+            // Invert the power for the right servo so they work together instead of fighting
+            turretright.setpower(-val);
+        }
     }
     public void telemetry(Telemetry telemetry){
         telemetry.addData("turretleft", turretleft.getEncoderPositionRegular());
         telemetry.addData("turretright", turretright.getEncoderPosition());
         telemetry.addData("turretvert", turretvert.getEncoderPosition());
+        telemetry.addData("targetPosition", targetPosition);
+        telemetry.addData("target", pidfController.calculate(targetPosition, turretleft.getEncoderPosition()));
 
     }
 

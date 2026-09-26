@@ -8,36 +8,21 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.LED;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.SUBS.Cluster;
 import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
 import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
-
-import java.util.List;
 
 public class HARDWARECONFIG {
     Cluster cluster = new Cluster();
@@ -60,7 +45,6 @@ public class HARDWARECONFIG {
     double x = 0;
     double y = 0;
     double indicator = 0;
-
 
 
     double color = 0;
@@ -87,7 +71,7 @@ public class HARDWARECONFIG {
     void initrobot(HardwareMap hwmap, LinearOpMode om, Boolean auto) {
         opMode = om;//
         telemetry = om.telemetry;
-        imc = new InitMovementController(opMode.gamepad2,opMode.gamepad1);
+        imc = new InitMovementController(opMode.gamepad2, opMode.gamepad1);
         //clawsub = new CLAWSUB(hwmap);
         // armSub = new org.firstinspires.ftc.teamcode.SUBS.ARMSUB(hwmap, auto);
         frontLeftMotor = hwmap.dcMotor.get("frontLeftMotor");
@@ -102,7 +86,7 @@ public class HARDWARECONFIG {
 
         drive = new MecanumDrive(hwmap, (Pose2d) blackboard.getOrDefault(currentpose, new Pose2d(0, 0, 0)));
 
-       // t = Turn(1.7);
+        // t = Turn(1.7);
 //         limelight = hwmap.get(Limelight3A.class, "limelight");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -119,21 +103,16 @@ public class HARDWARECONFIG {
         cluster.sendToDash();
 
 
-
-
 //
 
         elapsedTime = new ElapsedTime();
     }
 
 
-
     public static String currentpose = "currentpose";
 
 
-
     Action runningaction = null;
-
 
 
     public void indicatormath() {
@@ -143,12 +122,10 @@ public class HARDWARECONFIG {
             indicator = 0;
         }
     }
+
     public double getrange() {
         return cluster.getRange();
     }
-
-
-
 
 
     public void buildtelemetry() {
@@ -159,7 +136,7 @@ public class HARDWARECONFIG {
         telemetry.addData("x", x);
         telemetry.addData("y", y);
         telemetry.addData("indicator", indicator);
-        telemetry.addData("roll",cluster.getRange());
+        telemetry.addData("roll", cluster.getRange());
         shootersub.telemetry(telemetry);
         //powersub.telemetry(telemetry);
 
@@ -169,11 +146,10 @@ public class HARDWARECONFIG {
     boolean touchpadwpressed = false;
 
 
-
     public void dobulk() {//
         imc.checkHasMovedOnInit();
         //heading = getheadingfromAT();
-       // distance = getrangefromAT();
+        // distance = getrangefromAT();
         double y = -opMode.gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = opMode.gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         double rx = opMode.gamepad1.right_stick_x;
@@ -216,24 +192,37 @@ public class HARDWARECONFIG {
         } else {
             indicator = 0;
         }
-        if (opMode.gamepad1.dpad_up) {
-          shootersub.shootlock(cluster.getRange());
-        }
-        if (opMode.gamepad1.dpad_down){
-            shootersub.shootlock(0);
+//        if (opMode.gamepad1.dpad_up) {
+//            shootersub.shootlock(cluster.getRange());
+//        }
+        if (opMode.gamepad1.dpad_down) {
+            shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.dpad_left) {
-            shootersub.shootlock(1);
+            shootersub.shootlock(180.0);
         }
+        if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
+            // Check if the camera actually sees the tag right now
+            if (cluster.isTagDetected()) {
 
+                // Get the horizontal offset (you must add this method to your Cluster class)
+                double tagBearing = cluster.getBearing();
+                if (Math.abs(tagBearing) > 5) {
+                    double newTarget = shootersub.getcurrentPosition() + tagBearing;
+                    shootersub.shootlock(newTarget);
+                }
 
+                // Calculate the new absolute target: Current Position + Offset
 
+                // Command the PIDF to hold this new position
 
-
-
-
-
+            } else {
+                // Optional: If it loses sight of the tag, stay where it is,
+                // or return to a default center position (e.g., 0.0)
+                shootersub.shootlock(shootersub.getcurrentPosition());
+            }
+        }
 
 
 //        if (opMode.gamepad1.left_bumper) {
@@ -275,39 +264,32 @@ public class HARDWARECONFIG {
 //        }
 
 
-
-
-
-
-
-
-
-
         frontLeftMotor.setPower(frontLeftPower);
         backLeftMotor.setPower(backLeftPower);
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
 
-        if (imc.hasMovedOnInit()){
-            shootersub.update();
+        //if (imc.hasMovedOnInit()){
+        //  shootersub.update();
 
-        }
-        //armSub.update();
-
+        //}
+        shootersub.update();
         buildtelemetry();
 
     }
+
     public Action Turn(double angle) {
         Scribe.getInstance().logData("here");
         return drive.actionBuilder(drive.localizer.getPose())
                 .turnTo(Math.toRadians(angle + 15)).build();
     }
+
     public void lockit(double angle) {
         TelemetryPacket p = new TelemetryPacket();
 
 
 //        Scribe.getInstance().logData(angle);
-        if (angle != 0&& Math.abs(angle)>20) {
+        if (angle != 0 && Math.abs(angle) > 20) {
             Action t = Turn(Math.toRadians(angle));
 
 

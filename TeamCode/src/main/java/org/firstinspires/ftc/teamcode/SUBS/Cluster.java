@@ -80,6 +80,27 @@ public class Cluster {
         }
         return Double.POSITIVE_INFINITY;
     }
+    public double getBearing() {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // We only care about the cluster detection, just like your getRange method
+            if (detection instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection clusterDet = (AprilTagClusterDetection) detection;
+                return clusterDet.ftcPose.bearing; // Returns the left/right angle
+            }
+        }
+        return 0.0; // If no tag is seen, assume 0 offset
+    }
+
+    public boolean isTagDetected() {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection instanceof AprilTagClusterDetection) {
+                return true; // We found the tag!
+            }
+        }
+        return false; // No tag in view
+    }
 
     public void telemetry(Telemetry telemetry) {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
