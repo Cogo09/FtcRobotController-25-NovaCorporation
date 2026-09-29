@@ -201,6 +201,12 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.dpad_left) {
             shootersub.shootlock(180.0);
         }
+        if (opMode.gamepad1.dpad_right){
+            shootersub.shootlock(10.0);
+        }
+        if (opMode.gamepad1.a) {
+            shootersub.shootlock(270.0);
+        }
         if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
             // Check if the camera actually sees the tag right now

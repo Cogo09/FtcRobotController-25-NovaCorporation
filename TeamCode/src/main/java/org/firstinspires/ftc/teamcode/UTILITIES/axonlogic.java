@@ -76,7 +76,7 @@ public class axonlogic {
     }
 
     public double getEncoderPositionRegular() {
-        return (double) encoder.getCurrentPosition();
+        return (double) ((encoder.getCurrentPosition()+ encoder.getCurrentPosition()) * 0.5);
     }
 
     public double getEncoderPositionReversed() {

@@ -49,6 +49,9 @@ public class SHOOTERSUB {
     public double getcurrentPosition(){
         return turretleft.getEncoderPosition();
     }
+    public double getavg(){
+        return ((turretleft.getEncoderPosition()) + (turretright.getEncoderPosition())/2.0);
+    }
 
 
     public void update(){
@@ -64,15 +67,15 @@ public class SHOOTERSUB {
             turretleft.setpower(val);
 
             // Invert the power for the right servo so they work together instead of fighting
-            turretright.setpower(-val);
+            turretright.setpower(val);
         }
     }
     public void telemetry(Telemetry telemetry){
         telemetry.addData("turretleft", turretleft.getEncoderPositionRegular());
-        telemetry.addData("turretright", turretright.getEncoderPosition());
+        telemetry.addData("turretright", turretright.getEncoderPositionRegular());
         telemetry.addData("turretvert", turretvert.getEncoderPosition());
         telemetry.addData("targetPosition", targetPosition);
-        telemetry.addData("target", pidfController.calculate(targetPosition, turretleft.getEncoderPosition()));
+        telemetry.addData("target", pidfController.calculate(targetPosition, getavg()));
 
     }
 
