@@ -27,10 +27,13 @@ public class SHOOTERSUB {
     private axonlogic turretleft;
     private axonlogic turretright;
     private axonlogic turretvert;
+
     //MOTORS HERE LATER
 
     private boolean isHoldingPosition = false;
     private double targetPosition = 0;
+    private boolean isHoldingUpPosition = false;
+    private double targetUpPosition = 0;
 
     public void init(HardwareMap hwmap){
         turretleft = new axonlogic(hwmap, "turretleft");
@@ -39,12 +42,17 @@ public class SHOOTERSUB {
     }
 
 
-    PIDFController pidfController = new PIDFController(p, i ,d, f);
+    PIDFController pidfController = new PIDFController(p, i ,d, f );
+
 
 
     public void shootlock(double target){ //! cluster.range should get passed in as target
         this.targetPosition = target;
         isHoldingPosition = true;
+    }
+    public void uplock(double uptarget){
+        this.targetUpPosition = uptarget;
+        isHoldingUpPosition = true;
     }
     public double getcurrentPosition(){
         return turretleft.getEncoderPosition();
@@ -63,19 +71,38 @@ public class SHOOTERSUB {
                 val = 0.0;
             }
 
+
+
             // Send power to the left turret servo
             turretleft.setpower(val);
 
             // Invert the power for the right servo so they work together instead of fighting
             turretright.setpower(val);
+
+
+
+
+        }
+        if (isHoldingUpPosition) {
+            // Calculate power using your PIDF controller
+            // (Make sure the argument order matches your PIDFController class: target, current)
+            double vert = pidfController.calculate(targetUpPosition, turretvert.getEncoderPosition());
+            if (Double.isNaN(vert)){
+                vert = 0.0;
+            }
+
+            // Send power to the left turret servo
+            turretvert.setpower(vert);
         }
     }
     public void telemetry(Telemetry telemetry){
         telemetry.addData("turretleft", turretleft.getEncoderPositionRegular());
         telemetry.addData("turretright", turretright.getEncoderPositionRegular());
-        telemetry.addData("turretvert", turretvert.getEncoderPosition());
+        telemetry.addData("turretvert", turretvert.getEncoderPositionRegular());
         telemetry.addData("targetPosition", targetPosition);
         telemetry.addData("target", pidfController.calculate(targetPosition, getavg()));
+        telemetry.addData("targetUpPosition", targetUpPosition);
+        telemetry.addData("targetUp", pidfController.calculate(targetUpPosition, turretvert.getEncoderPosition()));
 
     }
 

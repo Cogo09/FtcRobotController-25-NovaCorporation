@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SUBS.Cluster;
+import org.firstinspires.ftc.teamcode.SUBS.PowerSUB;
 import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -30,6 +31,7 @@ public class HARDWARECONFIG {
     Telemetry telemetry = null;
     LinearOpMode opMode = null;
     public SHOOTERSUB shootersub = null;
+    public PowerSUB powersub = null;
     //public org.firstinspires.ftc.teamcode.SUBS.ARMSUB armSub = null;
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
@@ -60,7 +62,7 @@ public class HARDWARECONFIG {
     public HARDWARECONFIG(LinearOpMode om, HardwareMap hwmap, Boolean auto) {
         initrobot(hwmap, om, auto);
 
-        //powersub = new PowerSUB(hwmap);
+        powersub = new PowerSUB(hwmap);
         shootersub = new SHOOTERSUB();
         shootersub.init(hwmap);
 
@@ -137,8 +139,10 @@ public class HARDWARECONFIG {
         telemetry.addData("y", y);
         telemetry.addData("indicator", indicator);
         telemetry.addData("roll", cluster.getRange());
+        telemetry.addData("dist",cluster.getDistance());
+        telemetry.addData("bearing",cluster.getBearing());
         shootersub.telemetry(telemetry);
-        //powersub.telemetry(telemetry);
+        powersub.telemetry(telemetry);
 
         telemetry.update();
     }
@@ -192,6 +196,9 @@ public class HARDWARECONFIG {
         } else {
             indicator = 0;
         }
+        if (opMode.gamepad1.right_trigger > 0) {
+            powersub.littlepower();
+        }
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());
 //        }
@@ -207,6 +214,35 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.a) {
             shootersub.shootlock(270.0);
         }
+        if (opMode.gamepad1.x) {
+            shootersub.uplock(250.0);
+        }
+        if (opMode.gamepad1.y) {
+            shootersub.uplock(0.0);
+        }
+        if (opMode.gamepad1.b) { // Hold button to auto-aim
+
+            // Check if the camera actually sees the tag right now
+            if (cluster.isTagDetected()) {
+
+                // Get the horizontal offset (you must add this method to your Cluster class)
+                double tagdist = cluster.getDistance();
+                if (Math.abs(tagdist) > 5) {
+                    double newTarget = shootersub.getcurrentPosition() + tagdist;
+                    shootersub.shootlock(newTarget);
+                }
+
+                // Calculate the new absolute target: Current Position + Offset
+
+                // Command the PIDF to hold this new position
+
+            } else {
+                // Optional: If it loses sight of the tag, stay where it is,
+                // or return to a default center position (e.g., 0.0)
+                shootersub.shootlock(0.0);
+            }
+        }
+
         if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
             // Check if the camera actually sees the tag right now
@@ -226,7 +262,7 @@ public class HARDWARECONFIG {
             } else {
                 // Optional: If it loses sight of the tag, stay where it is,
                 // or return to a default center position (e.g., 0.0)
-                shootersub.shootlock(shootersub.getcurrentPosition());
+                shootersub.shootlock(0.0);
             }
         }
 

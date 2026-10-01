@@ -68,6 +68,16 @@ public class Cluster {
         range.refreshCache();
         return range.loadCache();
     }
+    public double getDistance(){
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection clusterDet = (AprilTagClusterDetection) detection;
+                return clusterDet.ftcPose.range;
+            }
+        }
+        return Double.POSITIVE_INFINITY;
+    }
 
 
     public double getRange() {
