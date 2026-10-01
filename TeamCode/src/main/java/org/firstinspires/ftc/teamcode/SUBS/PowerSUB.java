@@ -175,7 +175,7 @@ public class PowerSUB {
         public MotorAction(PowerSUB powersub, List<Runnable> funcs) {
             this.funcs = funcs;
             this.powersub = powersub;
-        }
+        }//m
 
 
         @Override
