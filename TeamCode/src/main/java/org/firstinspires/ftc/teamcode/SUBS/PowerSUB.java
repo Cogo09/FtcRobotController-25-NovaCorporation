@@ -6,12 +6,14 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.UTILITIES.FlyUTIL;
+import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class PowerSUB {
     private DcMotor intakeL;
     private DcMotorEx shooterR;
     private DcMotorEx shooterL;
+
+
 
     public enum gunSTATE {ON, OFF, EXTRA, LITTLE, EXTRALITTLE, IDLE}
 
@@ -144,9 +148,9 @@ public class PowerSUB {
                 break;
 
             case EXTRA:
-                shooterR.setVelocity(0.56 * FlyUTIL.highvelo);
+                shooterR.setVelocity(0.56*FlyUTIL.highvelo);
 
-                shooterL.setVelocity(0.56 * FlyUTIL.highvelo);
+                shooterL.setVelocity(0.56*FlyUTIL.highvelo);
                 break;
             case IDLE:
                 shooterR.setVelocity(0.0 * FlyUTIL.highvelo);

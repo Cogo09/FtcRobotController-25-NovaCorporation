@@ -14,14 +14,14 @@ import org.gentrifiedApps.gentrifiedAppsUtil.heatseeker.Driver;
 public final class ConfigRegistrar {
 
     static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
-            .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 1", 1)
+            .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 2", 1)
             .addCamera("Webcam 1","UC684")
             .addMotor("frontLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
             .addMotor("backLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("frontRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 2)
             .addMotor("backRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 3)
-//            .addMotor("intakeL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 2)
-//            .addMotor("intakeR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 3)
+            .addMotor("intakeL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 2)
+            .addMotor("intakeR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.RevRoboticsCoreHexMotor, 3)
             .addMotor("shooterL", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("shooterR", ConfigMaker.ModuleType.EXPANSION_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
 

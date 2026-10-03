@@ -5,9 +5,15 @@ import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.d;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.p;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.i;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.f;
+import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.dd;
+import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.pp;
+import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.ii;
+import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.ff;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.AXONS.vertPIDFController;
 import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -43,16 +49,29 @@ public class SHOOTERSUB {
 
 
     PIDFController pidfController = new PIDFController(p, i ,d, f );
+    vertPIDFController vertpidfcontroller = new vertPIDFController(pp, ii ,dd, ff );
 
 
 
     public void shootlock(double target){ //! cluster.range should get passed in as target
         this.targetPosition = target;
+
+    }
+    public void shootunlock(){
         isHoldingPosition = true;
     }
     public void uplock(double uptarget){
         this.targetUpPosition = uptarget;
+
+    }
+    public void upunlock(){
         isHoldingUpPosition = true;
+    }
+    public void lockshoot(){
+        isHoldingPosition = false;
+    }
+    public void lockup(){
+        isHoldingUpPosition = false;
     }
     public double getcurrentPosition(){
         return turretleft.getEncoderPosition();
@@ -63,13 +82,16 @@ public class SHOOTERSUB {
 
 
     public void update(){
-        if (isHoldingPosition) {
+        if (isHoldingPosition == true) {
             // Calculate power using your PIDF controller
             // (Make sure the argument order matches your PIDFController class: target, current)
             double val = pidfController.calculate(targetPosition, turretleft.getEncoderPosition());
             if (Double.isNaN(val)){
                 val = 0.0;
             }
+
+
+            // Send power to the left turret servo
 
 
 
@@ -82,17 +104,22 @@ public class SHOOTERSUB {
 
 
 
+        }else {
+            isHoldingPosition = false;
         }
-        if (isHoldingUpPosition) {
+        if (isHoldingUpPosition == true) {
             // Calculate power using your PIDF controller
             // (Make sure the argument order matches your PIDFController class: target, current)
-            double vert = pidfController.calculate(targetUpPosition, turretvert.getEncoderPosition());
+            double vert = vertpidfcontroller.calculate(targetUpPosition, turretvert.getEncoderPosition());
             if (Double.isNaN(vert)){
                 vert = 0.0;
             }
 
             // Send power to the left turret servo
             turretvert.setpower(vert);
+        }
+        else {
+            isHoldingUpPosition = false;
         }
     }
     public void telemetry(Telemetry telemetry){
@@ -102,7 +129,7 @@ public class SHOOTERSUB {
         telemetry.addData("targetPosition", targetPosition);
         telemetry.addData("target", pidfController.calculate(targetPosition, getavg()));
         telemetry.addData("targetUpPosition", targetUpPosition);
-        telemetry.addData("targetUp", pidfController.calculate(targetUpPosition, turretvert.getEncoderPosition()));
+        telemetry.addData("targetUp", vertpidfcontroller.calculate(targetUpPosition, turretvert.getEncoderPosition()));
 
     }
 

@@ -63,6 +63,7 @@ public class HARDWARECONFIG {
         initrobot(hwmap, om, auto);
 
         powersub = new PowerSUB(hwmap);
+
         shootersub = new SHOOTERSUB();
         shootersub.init(hwmap);
 
@@ -197,27 +198,44 @@ public class HARDWARECONFIG {
             indicator = 0;
         }
         if (opMode.gamepad1.right_trigger > 0) {
-            powersub.littlepower();
+            powersub.extrapower();
+        } else{
+            powersub.gunoff();
         }
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());
 //        }
         if (opMode.gamepad1.dpad_down) {
+            shootersub.lockup();
+
+            shootersub.shootunlock();
             shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.dpad_left) {
+            shootersub.lockup();
+
+            shootersub.shootunlock();
             shootersub.shootlock(180.0);
         }
         if (opMode.gamepad1.dpad_right){
+            shootersub.lockup();
+
+            shootersub.shootunlock();
             shootersub.shootlock(10.0);
         }
         if (opMode.gamepad1.a) {
+            shootersub.lockup();
+            shootersub.shootunlock();
             shootersub.shootlock(270.0);
         }
         if (opMode.gamepad1.x) {
+            shootersub.lockshoot();
+            shootersub.upunlock();
             shootersub.uplock(250.0);
         }
         if (opMode.gamepad1.y) {
+            shootersub.lockshoot();
+            shootersub.upunlock();
             shootersub.uplock(0.0);
         }
         if (opMode.gamepad1.b) { // Hold button to auto-aim
@@ -316,6 +334,7 @@ public class HARDWARECONFIG {
 
         //}
         shootersub.update();
+        powersub.update();
         buildtelemetry();
 
     }
