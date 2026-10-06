@@ -55,16 +55,17 @@ public class SHOOTERSUB {
 
     public void shootlock(double target){ //! cluster.range should get passed in as target
         this.targetPosition = target;
-
+        shootunlock();
     }
-    public void shootunlock(){
+    void shootunlock(){
         isHoldingPosition = true;
     }
     public void uplock(double uptarget){
         this.targetUpPosition = uptarget;
+        upunlock();
 
     }
-    public void upunlock(){
+    void upunlock(){
         isHoldingUpPosition = true;
     }
     public void lockshoot(){
@@ -112,8 +113,6 @@ public class SHOOTERSUB {
 
 
 
-        }else {
-            isHoldingPosition = false;
         }
         if (isHoldingUpPosition == true) {
             // Calculate power using your PIDF controller
@@ -125,9 +124,6 @@ public class SHOOTERSUB {
 
             // Send power to the left turret servo
             turretvert.setpower(vert);
-        }
-        else {
-            isHoldingUpPosition = false;
         }
     }
     public void telemetry(Telemetry telemetry){
