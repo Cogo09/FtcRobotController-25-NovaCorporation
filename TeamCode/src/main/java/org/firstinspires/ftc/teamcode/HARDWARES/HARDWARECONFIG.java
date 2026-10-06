@@ -228,24 +228,25 @@ public class HARDWARECONFIG {
             shootersub.lockshoot();
             shootersub.uplock(350.0);
         }
-        if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
-            shootersub.uplock(350);
-        }
-        if (cluster.getDistance() >50 && cluster.getDistance() <79){
-            shootersub.uplock(250);
 
-        }
         if (opMode.gamepad1.y) {
             shootersub.lockshoot();
             shootersub.uplock(0.0);
         }
-        if (opMode.gamepad1.b) { // Hold button to auto-aim
+        if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
+            shootersub.uplock(350);
+        }else
+        if (cluster.getDistance() >50 && cluster.getDistance() <79){
+            shootersub.uplock(250);
+
+        }else
+        if (opMode.gamepad1.b) { // Hold button to auto-aim //! should be first
 
             // Check if the camera actually sees the tag right now
             if (cluster.isTagDetected()) {
 
                 // Get the horizontal offset (you must add this method to your Cluster class)
-                if (cluster.getDistance() > 5) {
+                if (cluster.getDistance() > 5) { //! overrides previous uplock command
                     double newupTarget = cluster.getDistance() + 100;
                     shootersub.uplock(newupTarget);
                 }
