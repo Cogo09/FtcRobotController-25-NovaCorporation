@@ -231,7 +231,16 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
             shootersub.upunlock();
-            shootersub.uplock(250.0);
+            shootersub.uplock(350.0);
+        }
+        if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
+            shootersub.upunlock();
+            shootersub.uplock(350);
+        }
+        if (cluster.getDistance() >50 && cluster.getDistance() <79){
+            shootersub.upunlock();
+            shootersub.uplock(250);
+
         }
         if (opMode.gamepad1.y) {
             shootersub.lockshoot();
@@ -244,10 +253,9 @@ public class HARDWARECONFIG {
             if (cluster.isTagDetected()) {
 
                 // Get the horizontal offset (you must add this method to your Cluster class)
-                double tagdist = cluster.getDistance();
-                if (Math.abs(tagdist) > 5) {
-                    double newTarget = shootersub.getcurrentPosition() + tagdist;
-                    shootersub.shootlock(newTarget);
+                if (cluster.getDistance() > 5) {
+                    double newupTarget = cluster.getDistance() + 100;
+                    shootersub.uplock(newupTarget);
                 }
 
                 // Calculate the new absolute target: Current Position + Offset
@@ -257,7 +265,7 @@ public class HARDWARECONFIG {
             } else {
                 // Optional: If it loses sight of the tag, stay where it is,
                 // or return to a default center position (e.g., 0.0)
-                shootersub.shootlock(0.0);
+                shootersub.uplock(100.0);
             }
         }
 

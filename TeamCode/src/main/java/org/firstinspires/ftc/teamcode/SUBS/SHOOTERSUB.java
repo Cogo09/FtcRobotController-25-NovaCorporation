@@ -76,6 +76,10 @@ public class SHOOTERSUB {
     public double getcurrentPosition(){
         return turretleft.getEncoderPosition();
     }
+    public double getcurrentVertPosition(){
+        return turretvert.getEncoderPosition();
+    }
+
     public double getavg(){
         return ((turretleft.getEncoderPosition()) + (turretright.getEncoderPosition())/2.0);
     }
