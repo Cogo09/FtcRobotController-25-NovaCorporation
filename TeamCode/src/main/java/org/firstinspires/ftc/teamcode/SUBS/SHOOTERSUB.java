@@ -57,7 +57,7 @@ public class SHOOTERSUB {
         this.targetPosition = target;
         shootunlock();
     }
-    void shootunlock(){
+    public void shootunlock(){
         isHoldingPosition = true;
     }
     public void uplock(double uptarget){
@@ -71,7 +71,7 @@ public class SHOOTERSUB {
     public void lockshoot(){
         isHoldingPosition = false;
     }
-    public void lockup(){
+    void lockup(){
         isHoldingUpPosition = false;
     }
     public double getcurrentPosition(){

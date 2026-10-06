@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SUBS.Cluster;
 import org.firstinspires.ftc.teamcode.SUBS.PowerSUB;
 import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
+import org.firstinspires.ftc.teamcode.SUBS.Servosub;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -32,6 +33,7 @@ public class HARDWARECONFIG {
     LinearOpMode opMode = null;
     public SHOOTERSUB shootersub = null;
     public PowerSUB powersub = null;
+    public Servosub servos = null;
     //public org.firstinspires.ftc.teamcode.SUBS.ARMSUB armSub = null;
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
@@ -75,7 +77,7 @@ public class HARDWARECONFIG {
         opMode = om;//
         telemetry = om.telemetry;
         imc = new InitMovementController(opMode.gamepad2, opMode.gamepad1);
-        //clawsub = new CLAWSUB(hwmap);
+        servos = new  org.firstinspires.ftc.teamcode.SUBS.Servosub(hwmap);
         // armSub = new org.firstinspires.ftc.teamcode.SUBS.ARMSUB(hwmap, auto);
         frontLeftMotor = hwmap.dcMotor.get("frontLeftMotor");
         backLeftMotor = hwmap.dcMotor.get("backLeftMotor");
@@ -202,49 +204,46 @@ public class HARDWARECONFIG {
         } else{
             powersub.gunoff();
         }
+        if (opMode.gamepad2.a){
+            servos.setRampUP();
+        }
+        if (opMode.gamepad2.b){
+            servos.setRampDOWN();}
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());
 //        }
         if (opMode.gamepad1.dpad_down) {
-            shootersub.lockup();
 
             shootersub.shootunlock();
             shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.dpad_left) {
-            shootersub.lockup();
 
             shootersub.shootunlock();
             shootersub.shootlock(180.0);
         }
         if (opMode.gamepad1.dpad_right){
-            shootersub.lockup();
 
             shootersub.shootunlock();
             shootersub.shootlock(10.0);
         }
         if (opMode.gamepad1.a) {
-            shootersub.lockup();
             shootersub.shootunlock();
             shootersub.shootlock(270.0);
         }
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
-            shootersub.upunlock();
             shootersub.uplock(350.0);
         }
         if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
-            shootersub.upunlock();
             shootersub.uplock(350);
         }
         if (cluster.getDistance() >50 && cluster.getDistance() <79){
-            shootersub.upunlock();
             shootersub.uplock(250);
 
         }
         if (opMode.gamepad1.y) {
             shootersub.lockshoot();
-            shootersub.upunlock();
             shootersub.uplock(0.0);
         }
         if (opMode.gamepad1.b) { // Hold button to auto-aim

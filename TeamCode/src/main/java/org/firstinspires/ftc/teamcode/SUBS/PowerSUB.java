@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
 import java.util.List;
 
 public class PowerSUB {
-    private DcMotor intakeR;
-    private DcMotor intakeL;
+    private DcMotor intakeReg;
+    private DcMotor intakeLock;
     private DcMotorEx shooterR;
     private DcMotorEx shooterL;
 
@@ -51,16 +51,16 @@ public class PowerSUB {
         gunStateVar = gunSTATE.IDLE;
     }
 
-    public enum intakeSTATE {ON, OFF,ONSLOW, ONL, REVERSE, REVERSESLIGHT, IDLE}
+    public enum intakeSTATE {FRONTON, OFF, ALLON, REVERSE, IDLE}
 
     private PowerSUB.intakeSTATE intakeStateVar = PowerSUB.intakeSTATE.IDLE;
 
-    public void intakeon() {
-        intakeStateVar = intakeSTATE.ON;
+    public void fronton() {
+        intakeStateVar = intakeSTATE.FRONTON;
     }
 
-    public void intakeonl() {
-        intakeStateVar = intakeSTATE.ONL;
+    public void allon() {
+        intakeStateVar = intakeSTATE.ALLON;
     }
     //p
 
@@ -72,21 +72,18 @@ public class PowerSUB {
         intakeStateVar = intakeSTATE.REVERSE;
     }
 
-    public void intakereverseS() {
-        intakeStateVar = intakeSTATE.REVERSESLIGHT;
-    }
-    public void intakeonslow(){intakeStateVar = intakeSTATE.ONSLOW;}
 
 
     //this is where you put all enums and variables
     public PowerSUB(HardwareMap hwMap) {
         shooterL = hwMap.get(DcMotorEx.class, "shooterL");
         shooterR = hwMap.get(DcMotorEx.class, "shooterR");
-        intakeR = hwMap.get(DcMotor.class, "intakeR");
-        intakeL = hwMap.get(DcMotor.class, "intakeL");
-        intakeR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeL.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeR.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeReg = hwMap.get(DcMotor.class, "intakeReg");
+        intakeLock = hwMap.get(DcMotor.class, "intakeLock");
+        intakeReg.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeLock.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeLock.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeReg.setDirection(DcMotorSimple.Direction.FORWARD);
         shooterL.setDirection(DcMotorSimple.Direction.FORWARD);
         shooterR.setDirection(DcMotorSimple.Direction.REVERSE);
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(FlyUTIL.p, 0, 0, FlyUTIL.f);
@@ -98,29 +95,23 @@ public class PowerSUB {
     public void update() {
         // this is where you put your state machines and all power functions (call this in our main code)
         switch (intakeStateVar) {
-            case ONL:
-                intakeL.setPower(0.9);
+            case ALLON:
+                intakeLock.setPower(0.9);
+                intakeReg.setPower(0.9);
+
 
                 break;
-            case ON:
-                intakeL.setPower(0.75);
-                intakeR.setPower(0.75);
+            case FRONTON:
+                intakeReg.setPower(0.75);
                 break;
 
             case OFF:
-                intakeR.setPower(0);
-                intakeL.setPower(0);
+                intakeReg.setPower(0);
+                intakeLock.setPower(0);
                 break;
             case REVERSE:
-                intakeR.setPower(-1);
-                intakeL.setPower(-1);
-                break;
-            case ONSLOW:
-                intakeR.setPower(0.5);
-                intakeL.setPower(0.5);
-            case REVERSESLIGHT:
-                intakeR.setPower(-1);
-                intakeL.setPower(-1);
+                intakeReg.setPower(-1);
+                intakeLock.setPower(-1);
                 break;
             case IDLE:
 
