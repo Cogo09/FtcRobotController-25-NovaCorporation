@@ -208,43 +208,35 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.dpad_down) {
             shootersub.lockup();
 
-            shootersub.shootunlock();
             shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.dpad_left) {
             shootersub.lockup();
 
-            shootersub.shootunlock();
             shootersub.shootlock(180.0);
         }
         if (opMode.gamepad1.dpad_right){
             shootersub.lockup();
 
-            shootersub.shootunlock();
             shootersub.shootlock(10.0);
         }
         if (opMode.gamepad1.a) {
             shootersub.lockup();
-            shootersub.shootunlock();
             shootersub.shootlock(270.0);
         }
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
-            shootersub.upunlock();
             shootersub.uplock(350.0);
         }
         if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
-            shootersub.upunlock();
             shootersub.uplock(350);
         }
         if (cluster.getDistance() >50 && cluster.getDistance() <79){
-            shootersub.upunlock();
             shootersub.uplock(250);
 
         }
         if (opMode.gamepad1.y) {
             shootersub.lockshoot();
-            shootersub.upunlock();
             shootersub.uplock(0.0);
         }
         if (opMode.gamepad1.b) { // Hold button to auto-aim
