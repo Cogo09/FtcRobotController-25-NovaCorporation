@@ -188,6 +188,7 @@ public class HARDWARECONFIG {
         double armpower = 0;
 
 
+
 //
 //! -0.65, -0.4 0.5, 0.4 FIX
         if (heading >= -0.65 && heading <= -0.4) {
@@ -237,7 +238,7 @@ public class HARDWARECONFIG {
             shootersub.upunlock();
             shootersub.uplock(350);
         }
-        if (cluster.getDistance() >50 && cluster.getDistance() <79){
+        if (cluster.getDistance() > 50 && cluster.getDistance() <79){
             shootersub.upunlock();
             shootersub.uplock(250);
 
@@ -247,6 +248,7 @@ public class HARDWARECONFIG {
             shootersub.upunlock();
             shootersub.uplock(0.0);
         }
+
         if (opMode.gamepad1.b) { // Hold button to auto-aim
 
             // Check if the camera actually sees the tag right now
