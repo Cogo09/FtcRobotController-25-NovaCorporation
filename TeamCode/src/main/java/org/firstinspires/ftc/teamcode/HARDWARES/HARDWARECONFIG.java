@@ -215,7 +215,7 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.dpad_down) {
 
             shootersub.shootunlock();
-            shootersub.shootlock(90.0);
+            shootersub.shootlock(270.0);
         }
         if (opMode.gamepad1.dpad_left) {
 
@@ -225,48 +225,55 @@ public class HARDWARECONFIG {
         if (opMode.gamepad1.dpad_right){
 
             shootersub.shootunlock();
-            shootersub.shootlock(10.0);
+            shootersub.shootlock(350.0);
         }
         if (opMode.gamepad1.a) {
             shootersub.shootunlock();
-            shootersub.shootlock(270.0);
+            shootersub.shootlock(0.0);
         }
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
             shootersub.uplock(350.0);
         }
-        if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
+        if (opMode.gamepad1.b){
+        if (cluster.getDistance() > 40 && cluster.getDistance() < 50) {
             shootersub.uplock(350);
         }
-        if (cluster.getDistance() >50 && cluster.getDistance() <79){
-            shootersub.uplock(250);
-
+        if (cluster.getDistance() > 20 && cluster.getDistance() < 39) {
+            shootersub.uplock(275);
+        }
+        if (cluster.getDistance() > 10 && cluster.getDistance() < 19) {
+            shootersub.uplock(225);
+        }
+        if (cluster.getDistance() > 0 && cluster.getDistance() <9){
+            shootersub.uplock(150);
+        }
         }
         if (opMode.gamepad1.y) {
             shootersub.lockshoot();
             shootersub.uplock(0.0);
         }
-        if (opMode.gamepad1.b) { // Hold button to auto-aim
-
-            // Check if the camera actually sees the tag right now
-            if (cluster.isTagDetected()) {
-
-                // Get the horizontal offset (you must add this method to your Cluster class)
-                if (cluster.getDistance() > 5) {
-                    double newupTarget = cluster.getDistance() + 100;
-                    shootersub.uplock(newupTarget);
-                }
-
-                // Calculate the new absolute target: Current Position + Offset
-
-                // Command the PIDF to hold this new position
-
-            } else {
-                // Optional: If it loses sight of the tag, stay where it is,
-                // or return to a default center position (e.g., 0.0)
-                shootersub.uplock(100.0);
-            }
-        }
+//        if (opMode.gamepad1.b) { // Hold button to auto-aim
+//
+//            // Check if the camera actually sees the tag right now
+//            if (cluster.isTagDetected()) {
+//
+//                // Get the horizontal offset (you must add this method to your Cluster class)
+//                if (cluster.getDistance() > 5) {
+//                    double newupTarget = cluster.getDistance() + 100;
+//                    shootersub.uplock(newupTarget);
+//                }
+//
+//                // Calculate the new absolute target: Current Position + Offset
+//
+//                // Command the PIDF to hold this new position
+//
+//            } else {
+//                // Optional: If it loses sight of the tag, stay where it is,
+//                // or return to a default center position (e.g., 0.0)
+//                shootersub.uplock(100.0);
+//            }
+//        }
 
         if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
@@ -276,7 +283,7 @@ public class HARDWARECONFIG {
                 // Get the horizontal offset (you must add this method to your Cluster class)
                 double tagBearing = cluster.getBearing();
                 if (Math.abs(tagBearing) > 5) {
-                    double newTarget = shootersub.getcurrentPosition() + tagBearing;
+                    double newTarget = shootersub.getcurrentPosition() + (tagBearing/2.0);
                     shootersub.shootlock(newTarget);
                 }
 
@@ -287,7 +294,7 @@ public class HARDWARECONFIG {
             } else {
                 // Optional: If it loses sight of the tag, stay where it is,
                 // or return to a default center position (e.g., 0.0)
-                shootersub.shootlock(0.0);
+                shootersub.shootlock(180.0);
             }
         }
 
