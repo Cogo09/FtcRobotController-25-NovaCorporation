@@ -94,10 +94,12 @@ public class SHOOTERSUB {
         if (isHoldingPosition == true) {
             // Calculate power using your PIDF controller
             // (Make sure the argument order matches your PIDFController class: target, current)
-            double val = pidfController.calculate(targetPosition, turretleft.getEncoderPosition());
+            double val = pidfController.calculate(targetPosition, turretleft.getEncoderPositionRegular());
             if (Double.isNaN(val)){
                 val = 0.0;
             }
+
+            val = Math.max(-0.4, Math.min(0.4, val));
 
 
             // Send power to the left turret servo
@@ -117,7 +119,7 @@ public class SHOOTERSUB {
         if (isHoldingUpPosition == true) {
             // Calculate power using your PIDF controller
             // (Make sure the argument order matches your PIDFController class: target, current)
-            double vert = vertpidfcontroller.calculate(targetUpPosition, turretvert.getEncoderPosition());
+            double vert = vertpidfcontroller.calculate(targetUpPosition, turretvert.getEncoderPositionRegular());
             if (Double.isNaN(vert)){
                 vert = 0.0;
             }

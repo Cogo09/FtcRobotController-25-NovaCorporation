@@ -77,7 +77,7 @@ public class HARDWARECONFIG {
         opMode = om;//
         telemetry = om.telemetry;
         imc = new InitMovementController(opMode.gamepad2, opMode.gamepad1);
-        servos = new  org.firstinspires.ftc.teamcode.SUBS.Servosub(hwmap);
+        servos = new org.firstinspires.ftc.teamcode.SUBS.Servosub(hwmap);
         // armSub = new org.firstinspires.ftc.teamcode.SUBS.ARMSUB(hwmap, auto);
         frontLeftMotor = hwmap.dcMotor.get("frontLeftMotor");
         backLeftMotor = hwmap.dcMotor.get("backLeftMotor");
@@ -142,8 +142,8 @@ public class HARDWARECONFIG {
         telemetry.addData("y", y);
         telemetry.addData("indicator", indicator);
         telemetry.addData("roll", cluster.getRange());
-        telemetry.addData("dist",cluster.getDistance());
-        telemetry.addData("bearing",cluster.getBearing());
+        telemetry.addData("dist", cluster.getDistance());
+        telemetry.addData("bearing", cluster.getBearing());
         shootersub.telemetry(telemetry);
         powersub.telemetry(telemetry);
 
@@ -201,14 +201,15 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad1.right_trigger > 0) {
             powersub.extrapower();
-        } else{
+        } else {
             powersub.gunoff();
         }
-        if (opMode.gamepad2.a){
+        if (opMode.gamepad2.a) {
             servos.setRampUP();
         }
-        if (opMode.gamepad2.b){
-            servos.setRampDOWN();}
+        if (opMode.gamepad2.b) {
+            servos.setRampDOWN();
+        }
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());
 //        }
@@ -222,7 +223,7 @@ public class HARDWARECONFIG {
             shootersub.shootunlock();
             shootersub.shootlock(180.0);
         }
-        if (opMode.gamepad1.dpad_right){
+        if (opMode.gamepad1.dpad_right) {
 
             shootersub.shootunlock();
             shootersub.shootlock(350.0);
@@ -233,26 +234,57 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
-            shootersub.uplock(350.0);
+            shootersub.uplock(100);
         }
-        if (opMode.gamepad1.b){
-        if (cluster.getDistance() > 40 && cluster.getDistance() < 50) {
-            shootersub.uplock(350);
+
+
+        if (opMode.gamepad1.b) {
+            if (cluster.getDistance() > 45 && cluster.getDistance() < 50) {
+                shootersub.lockshoot();
+                shootersub.uplock(350);
+            }
+            if (cluster.getDistance() > 40 && cluster.getDistance() < 44) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(300);
+            }
+            if (cluster.getDistance() > 35 && cluster.getDistance() < 39) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(250);
+            }
+            if (cluster.getDistance() > 30 && cluster.getDistance() < 34) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(200);
+            }
+            if (cluster.getDistance() > 25 && cluster.getDistance() < 29) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(150);
+            }
+            if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(100);
+            }
+            if (cluster.getDistance() > 15 && cluster.getDistance() < 19) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(50);
+            }
+            if (cluster.getDistance() > 0 && cluster.getDistance() < 14) {
+                shootersub.lockshoot();
+
+                shootersub.uplock(0);
+            }
         }
-        if (cluster.getDistance() > 20 && cluster.getDistance() < 39) {
-            shootersub.uplock(275);
-        }
-        if (cluster.getDistance() > 10 && cluster.getDistance() < 19) {
-            shootersub.uplock(225);
-        }
-        if (cluster.getDistance() > 0 && cluster.getDistance() <9){
-            shootersub.uplock(150);
-        }
-        }
-        if (opMode.gamepad1.y) {
-            shootersub.lockshoot();
-            shootersub.uplock(0.0);
-        }
+
+
+            if (opMode.gamepad1.y) {
+                shootersub.lockshoot();
+                shootersub.uplock(0.0);
+            }
 //        if (opMode.gamepad1.b) { // Hold button to auto-aim
 //
 //            // Check if the camera actually sees the tag right now
@@ -275,28 +307,28 @@ public class HARDWARECONFIG {
 //            }
 //        }
 
-        if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
+            if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
-            // Check if the camera actually sees the tag right now
-            if (cluster.isTagDetected()) {
+                // Check if the camera actually sees the tag right now
+                if (cluster.isTagDetected()) {
 
-                // Get the horizontal offset (you must add this method to your Cluster class)
-                double tagBearing = cluster.getBearing();
-                if (Math.abs(tagBearing) > 5) {
-                    double newTarget = shootersub.getcurrentPosition() + (tagBearing/2.0);
-                    shootersub.shootlock(newTarget);
+                    // Get the horizontal offset (you must add this method to your Cluster class)
+                    double tagBearing = cluster.getBearing();
+                    if (Math.abs(tagBearing) > 5) {
+                        double newTarget = shootersub.getcurrentPosition() + (tagBearing / 2.0);
+                        shootersub.shootlock(newTarget);
+                    }
+
+                    // Calculate the new absolute target: Current Position + Offset
+
+                    // Command the PIDF to hold this new position
+
+                } else {
+                    // Optional: If it loses sight of the tag, stay where it is,
+                    // or return to a default center position (e.g., 0.0)
+                    shootersub.shootlock(180.0);
                 }
-
-                // Calculate the new absolute target: Current Position + Offset
-
-                // Command the PIDF to hold this new position
-
-            } else {
-                // Optional: If it loses sight of the tag, stay where it is,
-                // or return to a default center position (e.g., 0.0)
-                shootersub.shootlock(180.0);
             }
-        }
 
 
 //        if (opMode.gamepad1.left_bumper) {
@@ -338,51 +370,51 @@ public class HARDWARECONFIG {
 //        }
 
 
-        frontLeftMotor.setPower(frontLeftPower);
-        backLeftMotor.setPower(backLeftPower);
-        frontRightMotor.setPower(frontRightPower);
-        backRightMotor.setPower(backRightPower);
+            frontLeftMotor.setPower(frontLeftPower);
+            backLeftMotor.setPower(backLeftPower);
+            frontRightMotor.setPower(frontRightPower);
+            backRightMotor.setPower(backRightPower);
 
-        //if (imc.hasMovedOnInit()){
-        //  shootersub.update();
+            //if (imc.hasMovedOnInit()){
+            //  shootersub.update();
 
-        //}
-        shootersub.update();
-        powersub.update();
-        buildtelemetry();
+            //}
+            shootersub.update();
+            powersub.update();
+            buildtelemetry();
 
-    }
+        }
 
-    public Action Turn(double angle) {
-        Scribe.getInstance().logData("here");
-        return drive.actionBuilder(drive.localizer.getPose())
-                .turnTo(Math.toRadians(angle + 15)).build();
-    }
+        public Action Turn ( double angle){
+            Scribe.getInstance().logData("here");
+            return drive.actionBuilder(drive.localizer.getPose())
+                    .turnTo(Math.toRadians(angle + 15)).build();
+        }
 
-    public void lockit(double angle) {
-        TelemetryPacket p = new TelemetryPacket();
+        public void lockit ( double angle){
+            TelemetryPacket p = new TelemetryPacket();
 
 
 //        Scribe.getInstance().logData(angle);
-        if (angle != 0 && Math.abs(angle) > 20) {
-            Action t = Turn(Math.toRadians(angle));
+            if (angle != 0 && Math.abs(angle) > 20) {
+                Action t = Turn(Math.toRadians(angle));
 
 
-            if (runningaction != null) {
+                if (runningaction != null) {
 //                runningaction.preview(p.fieldOverlay());
-                Actions.runBlocking(runningaction);
-                runningaction = null;
+                    Actions.runBlocking(runningaction);
+                    runningaction = null;
 //                runningaction.run(p);
 //                if (!runningaction.run(p)) {
 //                    Scribe.getInstance().logData("true");
 //                    runningaction = null;
 //                }
 
-            } else {
-                runningaction = t;
+                } else {
+                    runningaction = t;
+                }
+                dash.sendTelemetryPacket(p);
             }
-            dash.sendTelemetryPacket(p);
         }
     }
-}
 

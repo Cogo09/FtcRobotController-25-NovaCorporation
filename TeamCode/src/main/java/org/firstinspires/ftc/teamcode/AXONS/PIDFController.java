@@ -44,8 +44,7 @@ public class PIDFController {
      * Our errorVal represents the return of e(t) and prevErrorVal is the previous error.
      *
      * @param sp The setpoint of the pid control loop.
-     * @param pv The measured value of he pid control loop. We want sp = pv, or to the degree
-     *           such that sp - pv, or e(t) < tolerance.
+     * @param pv The measured value of the pid control loop. We want sp = pv.
      */
     public PIDFController(double kp, double ki, double kd, double kf, double sp, double pv) {
         kP = kp;
@@ -62,8 +61,22 @@ public class PIDFController {
         lastTimeStamp = 0;
         period = 0;
 
-        errorVal_p = setPoint - measuredValue;
+        errorVal_p = wrapAngle(setPoint - measuredValue);
         reset();
+    }
+
+    /**
+     * Helper method to wrap an angle error between -180 and 180 degrees.
+     * (Assumes values are in degrees from 0 to 360).
+     */
+    private double wrapAngle(double angle) {
+        angle = angle % 360;
+        if (angle > 180) {
+            angle -= 360;
+        } else if (angle < -180) {
+            angle += 360;
+        }
+        return angle;
     }
 
     public void reset() {
@@ -108,13 +121,16 @@ public class PIDFController {
      */
     public void setSetPoint(double sp) {
         setPoint = sp;
-        errorVal_p = setPoint - measuredValue;
-        errorVal_v = (errorVal_p - prevErrorVal) / period;
+        errorVal_p = wrapAngle(setPoint - measuredValue);
+        if (Math.abs(period) > 1E-6) {
+            errorVal_v = (errorVal_p - prevErrorVal) / period;
+        } else {
+            errorVal_v = 0;
+        }
     }
 
     /**
-     * Returns true if the error is within the percentage of the total input range, determined by
-     * {@link #setTolerance}.
+     * Returns true if the error is within the acceptable bounds.
      *
      * @return Whether the error is within the acceptable bounds.
      */
@@ -154,8 +170,7 @@ public class PIDFController {
     /**
      * Calculates the next output of the PIDF controller.
      *
-     * @return the next output using the current measured value via
-     * {@link #calculate(double)}.
+     * @return the next output using the current measured value.
      */
     public double calculate() {
         return calculate(measuredValue);
@@ -166,11 +181,9 @@ public class PIDFController {
      *
      * @param pv The given measured value.
      * @param sp The given setpoint.
-     * @return the next output using the given measurd value via
-     * {@link #calculate(double)}.
+     * @return the next output using the given measured value and setpoint.
      */
     public double calculate(double pv, double sp) {
-        // set the setpoint to the provided value
         setSetPoint(sp);
         return calculate(pv);
     }
@@ -189,12 +202,12 @@ public class PIDFController {
         period = currentTimeStamp - lastTimeStamp;
         lastTimeStamp = currentTimeStamp;
 
-        if (measuredValue == pv) {
-            errorVal_p = setPoint - measuredValue;
-        } else {
-            errorVal_p = setPoint - pv;
+        if (measuredValue != pv) {
             measuredValue = pv;
         }
+
+        // Calculate wrapped shortest-path error
+        errorVal_p = wrapAngle(setPoint - measuredValue);
 
         if (Math.abs(period) > 1E-6) {
             errorVal_v = (errorVal_p - prevErrorVal) / period;
@@ -202,11 +215,7 @@ public class PIDFController {
             errorVal_v = 0;
         }
 
-        /*
-        if total error is the integral from 0 to t of e(t')dt', and
-        e(t) = sp - pv, then the total error, E(t), equals sp*t - pv*t.
-         */
-        totalError += period * (setPoint - measuredValue);
+        totalError += period * errorVal_p;
         totalError = totalError < minIntegral ? minIntegral : Math.min(maxIntegral, totalError);
 
         // returns u(t)
@@ -225,45 +234,19 @@ public class PIDFController {
         maxIntegral = integralMax;
     }
 
-    // used to clear kI gains
     public void clearTotalError() {
         totalError = 0;
     }
 
-    public void setP(double kp) {
-        kP = kp;
-    }
+    public void setP(double kp) { kP = kp; }
+    public void setI(double ki) { kI = ki; }
+    public void setD(double kd) { kD = kd; }
+    public void setF(double kf) { kF = kf; }
 
-    public void setI(double ki) {
-        kI = ki;
-    }
+    public double getP() { return kP; }
+    public double getI() { return kI; }
+    public double getD() { return kD; }
+    public double getF() { return kF; }
 
-    public void setD(double kd) {
-        kD = kd;
-    }
-
-    public void setF(double kf) {
-        kF = kf;
-    }
-
-    public double getP() {
-        return kP;
-    }
-
-    public double getI() {
-        return kI;
-    }
-
-    public double getD() {
-        return kD;
-    }
-
-    public double getF() {
-        return kF;
-    }
-
-    public double getPeriod() {
-        return period;
-    }
-
+    public double getPeriod() { return period; }
 }

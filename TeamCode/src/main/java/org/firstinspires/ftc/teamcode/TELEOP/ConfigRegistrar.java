@@ -30,8 +30,8 @@ public final class ConfigRegistrar {
             .addDevice("turretvert", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.ContinuousRotationServo, 2)
             .addDevice("turretright", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.ContinuousRotationServo, 1)
             .addDevice("turretleftEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,0)
-            .addDevice("turretrightEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2)
-            .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,1)
+            .addDevice("turretrightEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,1)
+            .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2)
             .addDevice("imu", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BHI260_IMU, 0);
 
 
