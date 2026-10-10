@@ -189,12 +189,12 @@ public class vertPIDFController {
         period = currentTimeStamp - lastTimeStamp;
         lastTimeStamp = currentTimeStamp;
 
-        if (measuredValue == pv) {
-            errorVal_p = setPoint - measuredValue;
-        } else {
-            errorVal_p = setPoint - pv;
+        if (measuredValue != pv) {
             measuredValue = pv;
         }
+
+        // Calculate wrapped shortest-path error
+        errorVal_p = wrapAngle(setPoint - measuredValue);
 
         if (Math.abs(period) > 1E-6) {
             errorVal_v = (errorVal_p - prevErrorVal) / period;
@@ -202,11 +202,7 @@ public class vertPIDFController {
             errorVal_v = 0;
         }
 
-        /*
-        if total error is the integral from 0 to t of e(t')dt', and
-        e(t) = sp - pv, then the total error, E(t), equals sp*t - pv*t.
-         */
-        totalError += period * (setPoint - measuredValue);
+        totalError += period * errorVal_p;
         totalError = totalError < minIntegral ? minIntegral : Math.min(maxIntegral, totalError);
 
         // returns u(t)
@@ -218,6 +214,16 @@ public class vertPIDFController {
         kI = ki;
         kD = kd;
         kF = kf;
+    }
+
+    private double wrapAngle(double angle) {
+        angle = angle % 360;
+        if (angle > 180) {
+            angle -= 360;
+        } else if (angle < -180) {
+            angle += 360;
+        }
+        return angle;
     }
 
     public void setIntegrationBounds(double integralMin, double integralMax) {

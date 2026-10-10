@@ -230,11 +230,11 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad1.a) {
             shootersub.shootunlock();
-            shootersub.shootlock(0.0);
+            shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.x) {
             shootersub.lockshoot();
-            shootersub.uplock(100);
+            shootersub.uplock(70);
         }
 
 
@@ -283,7 +283,7 @@ public class HARDWARECONFIG {
 
             if (opMode.gamepad1.y) {
                 shootersub.lockshoot();
-                shootersub.uplock(0.0);
+                shootersub.uplock(150);
             }
 //        if (opMode.gamepad1.b) { // Hold button to auto-aim
 //
@@ -315,7 +315,7 @@ public class HARDWARECONFIG {
                     // Get the horizontal offset (you must add this method to your Cluster class)
                     double tagBearing = cluster.getBearing();
                     if (Math.abs(tagBearing) > 5) {
-                        double newTarget = shootersub.getcurrentPosition() + (tagBearing / 2.0);
+                        double newTarget = shootersub.getcurrentPosition() - (tagBearing);
                         shootersub.shootlock(newTarget);
                     }
 
@@ -323,7 +323,8 @@ public class HARDWARECONFIG {
 
                     // Command the PIDF to hold this new position
 
-                } else {
+                }
+                else {
                     // Optional: If it loses sight of the tag, stay where it is,
                     // or return to a default center position (e.g., 0.0)
                     shootersub.shootlock(180.0);

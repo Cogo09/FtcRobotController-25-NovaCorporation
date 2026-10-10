@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class AXONutil {
-    public static double p = 0.0029;
+    public static double p = 0.003;
     public static double i = 0.0001;
     public static double d = 0.9;
     public static double f = 0.000;
