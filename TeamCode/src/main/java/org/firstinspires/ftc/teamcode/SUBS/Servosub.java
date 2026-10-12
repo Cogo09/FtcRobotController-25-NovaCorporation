@@ -18,7 +18,29 @@ import java.util.List;
 public class Servosub {
     private final Servo ramp;
     private final Servo ramp2;
+    private final Servo turretvert;
 
+    public enum VertState {TOP, BOTTOM, IDLE};
+
+    private VertState VertStateVar = VertState.IDLE;
+
+    public void setVertTOP() {
+        VertStateVar = VertState.TOP;
+    }
+    public void setVertX(double x){
+        double dif = Math.abs(SERVOUTIL.turretverttop-SERVOUTIL.turretvertbottom);
+        double newpos = SERVOUTIL.turretvertbottom + dif*x;
+        setVertIDLE();
+        setpose(turretvert, newpos);
+    }
+
+    public void setVertBOTTOM() {
+        VertStateVar = VertState.BOTTOM;
+    }
+
+    public void setVertIDLE() {
+        VertStateVar = VertState.IDLE;
+    }
 
     public enum RampState {UP, DOWN, IDLE}
 
@@ -42,6 +64,7 @@ public class Servosub {
     public Servosub(HardwareMap hwMap) {
         ramp = hwMap.get(Servo.class, "rampservo");
         ramp2 = hwMap.get(Servo.class, "rampservo2");
+        turretvert = hwMap.get(Servo.class, "turretvert");
 
 
     }
@@ -59,6 +82,18 @@ public class Servosub {
             case DOWN:
                 setpose(ramp, SERVOUTIL.rampdown);//actually open decrease to open more
                 setpose(ramp2, SERVOUTIL.rampdown);
+                break;
+            case IDLE:
+
+                break;
+
+        }
+        switch (VertStateVar) {
+            case TOP:
+                setpose(turretvert, SERVOUTIL.turretverttop);
+                break;
+            case BOTTOM:
+                setpose(turretvert, SERVOUTIL.turretvertbottom);
                 break;
             case IDLE:
 

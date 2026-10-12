@@ -59,6 +59,9 @@ public class axonlogic {
         degree = Range.clip(degree, -1, 1);
         servo.setPower(degree); //! use Range.clamp(degree, min(-1), max(1)) to clamp it to servo range
     } //! rename this to its actual usage
+    public double getpower(){
+    return servo.getPower();
+    }
 
 //    public void setPositionCheck(double degree) {
 //        servo.setPower(degree);
@@ -76,7 +79,7 @@ public class axonlogic {
     }
 
     public double getEncoderPositionRegular() {
-        return (double) ((encoder.getCurrentPosition()+ encoder.getCurrentPosition()) * 0.5);
+        return  (((encoder.getVoltage() - 3.3) / 3.3) * 360) ;
     }
 
     public double getEncoderPositionReversed() {

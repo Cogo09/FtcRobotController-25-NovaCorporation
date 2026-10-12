@@ -233,57 +233,45 @@ public class HARDWARECONFIG {
             shootersub.shootlock(90.0);
         }
         if (opMode.gamepad1.x) {
-            shootersub.lockshoot();
-            shootersub.uplock(70);
+            servos.setVertBOTTOM();
         }
 
 
         if (opMode.gamepad1.b) {
             if (cluster.getDistance() > 45 && cluster.getDistance() < 50) {
-                shootersub.lockshoot();
-                shootersub.uplock(350);
+                servos.setVertBOTTOM();
             }
             if (cluster.getDistance() > 40 && cluster.getDistance() < 44) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(300);
+                servos.setVertX(1);
             }
             if (cluster.getDistance() > 35 && cluster.getDistance() < 39) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(250);
+                servos.setVertTOP();
             }
             if (cluster.getDistance() > 30 && cluster.getDistance() < 34) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(200);
+                servos.setVertX(0.5);
             }
             if (cluster.getDistance() > 25 && cluster.getDistance() < 29) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(150);
+                servos.setVertTOP();
             }
             if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(100);
+                servos.setVertTOP();
             }
             if (cluster.getDistance() > 15 && cluster.getDistance() < 19) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(50);
+                servos.setVertTOP();
             }
             if (cluster.getDistance() > 0 && cluster.getDistance() < 14) {
-                shootersub.lockshoot();
-
-                shootersub.uplock(0);
+                servos.setVertX(0);
             }
         }
+//        if (opMode.gamepad1.left_stick_button){
+//            shootersub.setVert(-0.5);
+//        }else if (opMode.gamepad1.right_stick_button){
+//            shootersub.setVert(0.5);
+//        }
 
 
             if (opMode.gamepad1.y) {
-                shootersub.lockshoot();
-                shootersub.uplock(150);
+                servos.setVertTOP();
             }
 //        if (opMode.gamepad1.b) { // Hold button to auto-aim
 //
@@ -324,11 +312,11 @@ public class HARDWARECONFIG {
                     // Command the PIDF to hold this new position
 
                 }
-                else {
-                    // Optional: If it loses sight of the tag, stay where it is,
-                    // or return to a default center position (e.g., 0.0)
-                    shootersub.shootlock(180.0);
-                }
+//                else {
+//                    // Optional: If it loses sight of the tag, stay where it is,
+//                    // or return to a default center position (e.g., 0.0)
+//                    shootersub.shootlock(180.0);
+//                }
             }
 
 
@@ -381,6 +369,7 @@ public class HARDWARECONFIG {
 
             //}
             shootersub.update();
+            servos.update();
             powersub.update();
             buildtelemetry();
 
