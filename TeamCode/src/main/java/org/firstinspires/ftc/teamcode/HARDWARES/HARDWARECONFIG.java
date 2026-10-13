@@ -254,7 +254,7 @@ public class HARDWARECONFIG {
             if (cluster.getDistance() > 25 && cluster.getDistance() < 29) {
                 servos.setVertX(0.66);
             }
-            if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {
+            if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {//
                 servos.setVertX(0.75);
             }
             if (cluster.getDistance() > 15 && cluster.getDistance() < 19) {
