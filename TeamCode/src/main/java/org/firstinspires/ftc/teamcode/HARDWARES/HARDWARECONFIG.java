@@ -49,6 +49,7 @@ public class HARDWARECONFIG {
     double x = 0;
     double y = 0;
     double indicator = 0;
+    public boolean aimbot = false;
 
 
     double color = 0;
@@ -237,30 +238,30 @@ public class HARDWARECONFIG {
         }
 
 
-        if (opMode.gamepad1.b) {
+        if (aimbot == true) {
             if (cluster.getDistance() > 45 && cluster.getDistance() < 50) {
                 servos.setVertBOTTOM();
             }
             if (cluster.getDistance() > 40 && cluster.getDistance() < 44) {
-                servos.setVertX(1);
+                servos.setVertX(0);
             }
             if (cluster.getDistance() > 35 && cluster.getDistance() < 39) {
-                servos.setVertTOP();
+                servos.setVertX(0.25);
             }
             if (cluster.getDistance() > 30 && cluster.getDistance() < 34) {
                 servos.setVertX(0.5);
             }
             if (cluster.getDistance() > 25 && cluster.getDistance() < 29) {
-                servos.setVertTOP();
+                servos.setVertX(0.66);
             }
             if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {
-                servos.setVertTOP();
+                servos.setVertX(0.75);
             }
             if (cluster.getDistance() > 15 && cluster.getDistance() < 19) {
-                servos.setVertTOP();
+                servos.setVertX(0.9);
             }
             if (cluster.getDistance() > 0 && cluster.getDistance() < 14) {
-                servos.setVertX(0);
+                servos.setVertX(1);
             }
         }
 //        if (opMode.gamepad1.left_stick_button){
@@ -270,9 +271,9 @@ public class HARDWARECONFIG {
 //        }
 
 
-            if (opMode.gamepad1.y) {
-                servos.setVertTOP();
-            }
+        if (opMode.gamepad1.y) {
+            servos.setVertTOP();
+        }
 //        if (opMode.gamepad1.b) { // Hold button to auto-aim
 //
 //            // Check if the camera actually sees the tag right now
@@ -294,30 +295,34 @@ public class HARDWARECONFIG {
 //                shootersub.uplock(100.0);
 //            }
 //        }
+        if (opMode.gamepad1.dpad_up) {
+            aimbot = true;
+        }
 
-            if (opMode.gamepad1.dpad_up) { // Hold button to auto-aim
 
-                // Check if the camera actually sees the tag right now
-                if (cluster.isTagDetected()) {
+        if (aimbot == true) { // Hold button to auto-aim
 
-                    // Get the horizontal offset (you must add this method to your Cluster class)
-                    double tagBearing = cluster.getBearing();
-                    if (Math.abs(tagBearing) > 5) {
-                        double newTarget = shootersub.getcurrentPosition() - (tagBearing);
-                        shootersub.shootlock(newTarget);
-                    }
+            // Check if the camera actually sees the tag right now
+            if (cluster.isTagDetected()) {
 
-                    // Calculate the new absolute target: Current Position + Offset
-
-                    // Command the PIDF to hold this new position
-
+                // Get the horizontal offset (you must add this method to your Cluster class)
+                double tagBearing = cluster.getBearing();
+                if (Math.abs(tagBearing) > 5) {
+                    double newTarget = shootersub.getcurrentPosition() - (tagBearing);
+                    shootersub.shootlock(newTarget);
                 }
+
+                // Calculate the new absolute target: Current Position + Offset
+
+                // Command the PIDF to hold this new position
+
+            }
 //                else {
 //                    // Optional: If it loses sight of the tag, stay where it is,
 //                    // or return to a default center position (e.g., 0.0)
 //                    shootersub.shootlock(180.0);
 //                }
-            }
+        }
 
 
 //        if (opMode.gamepad1.left_bumper) {
@@ -359,52 +364,52 @@ public class HARDWARECONFIG {
 //        }
 
 
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
+        frontLeftMotor.setPower(frontLeftPower);
+        backLeftMotor.setPower(backLeftPower);
+        frontRightMotor.setPower(frontRightPower);
+        backRightMotor.setPower(backRightPower);
 
-            //if (imc.hasMovedOnInit()){
-            //  shootersub.update();
+        //if (imc.hasMovedOnInit()){
+        //  shootersub.update();
 
-            //}
-            shootersub.update();
-            servos.update();
-            powersub.update();
-            buildtelemetry();
+        //}
+        shootersub.update();
+        servos.update();
+        powersub.update();
+        buildtelemetry();
 
-        }
+    }
 
-        public Action Turn ( double angle){
-            Scribe.getInstance().logData("here");
-            return drive.actionBuilder(drive.localizer.getPose())
-                    .turnTo(Math.toRadians(angle + 15)).build();
-        }
+    public Action Turn(double angle) {
+        Scribe.getInstance().logData("here");
+        return drive.actionBuilder(drive.localizer.getPose())
+                .turnTo(Math.toRadians(angle + 15)).build();
+    }
 
-        public void lockit ( double angle){
-            TelemetryPacket p = new TelemetryPacket();
+    public void lockit(double angle) {
+        TelemetryPacket p = new TelemetryPacket();
 
 
 //        Scribe.getInstance().logData(angle);
-            if (angle != 0 && Math.abs(angle) > 20) {
-                Action t = Turn(Math.toRadians(angle));
+        if (angle != 0 && Math.abs(angle) > 20) {
+            Action t = Turn(Math.toRadians(angle));
 
 
-                if (runningaction != null) {
+            if (runningaction != null) {
 //                runningaction.preview(p.fieldOverlay());
-                    Actions.runBlocking(runningaction);
-                    runningaction = null;
+                Actions.runBlocking(runningaction);
+                runningaction = null;
 //                runningaction.run(p);
 //                if (!runningaction.run(p)) {
 //                    Scribe.getInstance().logData("true");
 //                    runningaction = null;
 //                }
 
-                } else {
-                    runningaction = t;
-                }
-                dash.sendTelemetryPacket(p);
+            } else {
+                runningaction = t;
             }
+            dash.sendTelemetryPacket(p);
         }
     }
+}
 

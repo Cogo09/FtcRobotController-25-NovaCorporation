@@ -56,7 +56,7 @@ public class Cluster {
         builder.setStreamFormat(VisionPortal.StreamFormat.YUY2)
         ;
         //builder.setCameraResolution(Size cameraResolution = new Size(640, 480));
-        //aprilTag.setDecimation(100);
+        aprilTag.setDecimation(3);
         visionPortal = builder.build();
     }
 
