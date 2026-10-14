@@ -154,7 +154,8 @@ public class SHOOTERSUB {
 ////            vert = Math.clamp(vert,-0.3,0.3);
 //
 //            // Send power to the left turret servo
-//            turretvert.setpower(vert);
+//            turretvert.setpowe
+//            r(vert);
 //        }
 
     }
