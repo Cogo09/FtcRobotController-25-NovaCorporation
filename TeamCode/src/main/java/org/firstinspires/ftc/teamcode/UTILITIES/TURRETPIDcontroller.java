@@ -66,6 +66,8 @@ public class TURRETPIDcontroller {
         reset();
     }
 
+
+
     public void reset() {
         totalError = 0;
         prevErrorVal = 0;
@@ -110,6 +112,10 @@ public class TURRETPIDcontroller {
         setPoint = sp;
         errorVal_p = setPoint - measuredValue;
         errorVal_v = (errorVal_p - prevErrorVal) / period;
+    }
+
+    public double getposition(){
+        return measuredValue;
     }
 
     /**

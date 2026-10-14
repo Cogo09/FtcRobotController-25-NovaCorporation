@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.d;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.p;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.i;
 import static org.firstinspires.ftc.teamcode.UTILITIES.AXONutil.f;
-import static org.firstinspires.ftc.teamcode.UTILITIES.TURRETUTIL.ddd;
 import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.dd;
 import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.pp;
 import static org.firstinspires.ftc.teamcode.UTILITIES.VertAXONutil.ii;
@@ -23,6 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.AXONS.vertPIDFController;
+import org.firstinspires.ftc.teamcode.UTILITIES.TURRETPIDcontroller;
 import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -42,7 +42,7 @@ public class SHOOTERSUB {
     private axonlogic turretleft;
     private axonlogic turretright;
     private Servo turretvert;
-    private DcMotorEx turretcontrol;
+    private DcMotor turretcontrol;
 
     //MOTORS HERE LATER
 
@@ -53,10 +53,11 @@ public class SHOOTERSUB {
 
     PIDFController pidfController = new PIDFController(p, i ,d, f );
     PIDController vertpidfcontroller = new PIDController(pp, ii ,dd );
-    PIDController turretcontroller = new PIDController (ppp, iii ,ddd);
+    TURRETPIDcontroller turretcontroller = new TURRETPIDcontroller(ppp,iii,ddd,fff);
     public void init(HardwareMap hwmap){
         turretleft = new axonlogic(hwmap, "turretleft");
         turretright = new axonlogic(hwmap, "turretright");
+        turretcontrol = hwmap.dcMotor.get("turretcontrol");
         //turretvert = new Servo(hwmap, "turretvert");
         vertpidfcontroller.reset();
         //! 270 max down vertpidf
@@ -136,7 +137,7 @@ public class SHOOTERSUB {
 
         }
         if (isHoldingPosition == true){
-            double targetpose = pidfController.calculate(targetPosition, turretcontroller.getPositionError());
+            double targetpose = pidfController.calculate(targetPosition, turretcontroller.getposition());
             if (Double.isNaN(targetpose)){
                 targetpose = 0.0;
             }
