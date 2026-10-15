@@ -42,7 +42,7 @@ public class SHOOTERSUB {
     private axonlogic turretleft;
     private axonlogic turretright;
     private Servo turretvert;
-    private DcMotor turretcontrol;
+    //private DcMotor turretcontrol;
 
     //MOTORS HERE LATER
 
@@ -57,7 +57,7 @@ public class SHOOTERSUB {
     public void init(HardwareMap hwmap){
         turretleft = new axonlogic(hwmap, "turretleft");
         turretright = new axonlogic(hwmap, "turretright");
-        turretcontrol = hwmap.dcMotor.get("turretcontrol");
+        //turretcontrol = hwmap.dcMotor.get("turretcontrol");
         //turretvert = new Servo(hwmap, "turretvert");
         vertpidfcontroller.reset();
         //! 270 max down vertpidf
@@ -142,7 +142,7 @@ public class SHOOTERSUB {
                 targetpose = 0.0;
             }
             targetpose = Math.max(-0.1, Math.min(0.1, targetpose));
-            turretcontrol.setPower(targetpose);
+            //turretcontrol.setPower(targetpose);
         }
 //        if (isHoldingUpPosition == true) {
 //            // Calculate power using your PIDF controller
@@ -162,7 +162,7 @@ public class SHOOTERSUB {
     public void telemetry(Telemetry telemetry){
         telemetry.addData("turretleft", turretleft.getEncoderPositionRegular());
         telemetry.addData("turretright", turretright.getEncoderPositionRegular());
-        telemetry.addData("turretmain", turretcontrol.getCurrentPosition());
+        //telemetry.addData("turretmain", turretcontrol.getCurrentPosition());
 //        telemetry.addData("turretvert", turretvert.getEncoderPositionRegular());
 //        telemetry.addData("turretvert", turretvert.getEncoderPositionReversed());
         telemetry.addData("targetPosition", targetPosition);

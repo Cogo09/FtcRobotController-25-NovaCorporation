@@ -202,8 +202,10 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad1.right_trigger > 0) {
             powersub.extrapower();
-        } else {
-            powersub.gunoff();
+        }else if (opMode.gamepad1.left_trigger > 0) {
+            powersub.power();
+        } else{
+            powersub.gunidle();
         }
         if (opMode.gamepad2.a) {
             servos.setRampUP();
