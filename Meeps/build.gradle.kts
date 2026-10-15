@@ -1,0 +1,15 @@
+import org.gradle.kotlin.dsl.implementation
+plugins {
+    id("java-library")
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+repositories {
+    maven { url = uri("https://maven.brott.dev/") }
+}
+
+dependencies {
+    implementation("com.acmerobotics.roadrunner:MeepMeep:0.1.7")
+}
