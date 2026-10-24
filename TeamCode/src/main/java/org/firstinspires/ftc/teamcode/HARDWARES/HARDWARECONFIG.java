@@ -202,9 +202,9 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad1.right_trigger > 0) {
             powersub.extrapower();
-        }else if (opMode.gamepad1.left_trigger > 0) {
+        } else if (opMode.gamepad1.left_trigger > 0) {
             powersub.power();
-        } else{
+        } else {
             powersub.gunidle();
         }
         if (opMode.gamepad2.a) {
@@ -212,6 +212,15 @@ public class HARDWARECONFIG {
         }
         if (opMode.gamepad2.b) {
             servos.setRampDOWN();
+        }
+        if (opMode.gamepad2.right_bumper) {
+            powersub.allon();
+        } else if (opMode.gamepad2.b){
+            powersub.fronton();
+        } else if (opMode.gamepad2.a){
+            powersub.intakereverse();
+        }else {
+            powersub.intakeidle();
         }
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());

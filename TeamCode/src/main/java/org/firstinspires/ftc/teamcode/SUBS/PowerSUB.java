@@ -6,14 +6,12 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.UTILITIES.FlyUTIL;
-import org.firstinspires.ftc.teamcode.UTILITIES.axonlogic;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ public class PowerSUB {
     private DcMotor intakeLock;
     private DcMotorEx shooterR;
     private DcMotorEx shooterL;
-
 
 
     public enum gunSTATE {ON, OFF, EXTRA, LITTLE, EXTRALITTLE, IDLE}
@@ -37,7 +34,10 @@ public class PowerSUB {
     public void littlepower() {
         gunStateVar = gunSTATE.LITTLE;
     }
-    public void extralittle(){gunStateVar = gunSTATE.EXTRALITTLE;}
+
+    public void extralittle() {
+        gunStateVar = gunSTATE.EXTRALITTLE;
+    }
 
     public void gunoff() {
         gunStateVar = gunSTATE.OFF;
@@ -68,10 +68,13 @@ public class PowerSUB {
         intakeStateVar = intakeSTATE.OFF;
     }
 
+    public void intakeidle() {
+        intakeStateVar = intakeSTATE.IDLE;
+    }
+
     public void intakereverse() {
         intakeStateVar = intakeSTATE.REVERSE;
     }
-
 
 
     //this is where you put all enums and variables
@@ -83,7 +86,7 @@ public class PowerSUB {
         intakeReg.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeLock.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeLock.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeReg.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeReg.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterL.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterR.setDirection(DcMotorSimple.Direction.FORWARD);
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(FlyUTIL.p, 0, 0, FlyUTIL.f);
@@ -114,6 +117,8 @@ public class PowerSUB {
                 intakeLock.setPower(-1);
                 break;
             case IDLE:
+                intakeLock.setPower(0);
+                intakeReg.setPower(0);
 
                 break;
         }
@@ -134,14 +139,14 @@ public class PowerSUB {
                 shooterR.setVelocity(0.44 * FlyUTIL.highvelo);
                 break;
             case EXTRALITTLE:
-                shooterL.setVelocity(0.42*FlyUTIL.highvelo);
-                shooterR.setVelocity(0.42*FlyUTIL.highvelo);
+                shooterL.setVelocity(0.42 * FlyUTIL.highvelo);
+                shooterR.setVelocity(0.42 * FlyUTIL.highvelo);
                 break;
 
             case EXTRA:
-                shooterR.setVelocity(FlyUTIL.highvelo);
+                shooterR.setVelocity(0.5 * FlyUTIL.highvelo);
 
-                shooterL.setVelocity(FlyUTIL.highvelo);
+                shooterL.setVelocity(0.5 * FlyUTIL.highvelo);
                 break;
             case IDLE:
                 shooterR.setVelocity(0.0 * FlyUTIL.highvelo);
