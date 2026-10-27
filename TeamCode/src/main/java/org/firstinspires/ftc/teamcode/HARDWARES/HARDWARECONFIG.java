@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SUBS.Cluster;
+import org.firstinspires.ftc.teamcode.SUBS.LLcluster;
 import org.firstinspires.ftc.teamcode.SUBS.PowerSUB;
 import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
 import org.firstinspires.ftc.teamcode.SUBS.Servosub;
@@ -27,6 +28,7 @@ import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
 
 public class HARDWARECONFIG {
+    //LLcluster cluster = new LLcluster();
     Cluster cluster = new Cluster();
     boolean slowmode = false;
     Telemetry telemetry = null;
@@ -207,10 +209,10 @@ public class HARDWARECONFIG {
         } else {
             powersub.gunidle();
         }
-        if (opMode.gamepad2.a) {
+        if (opMode.gamepad2.y) {
             servos.setRampUP();
         }
-        if (opMode.gamepad2.b) {
+        if (opMode.gamepad2.x) {
             servos.setRampDOWN();
         }
         if (opMode.gamepad2.right_bumper) {

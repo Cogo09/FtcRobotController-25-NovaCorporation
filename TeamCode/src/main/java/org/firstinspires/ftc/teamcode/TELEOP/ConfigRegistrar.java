@@ -15,7 +15,8 @@ public final class ConfigRegistrar {
 
     static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
             .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 2", 1)
-            .addCamera("Webcam 1","UC684")
+            //.addCamera("Webcam 1","UC684")
+            .addCamera("Limelight3a", "172.29.0.1")
             .addMotor("frontLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
             .addMotor("backLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("frontRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 2)

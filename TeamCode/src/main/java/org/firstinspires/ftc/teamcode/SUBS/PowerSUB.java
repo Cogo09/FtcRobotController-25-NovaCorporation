@@ -99,13 +99,13 @@ public class PowerSUB {
         // this is where you put your state machines and all power functions (call this in our main code)
         switch (intakeStateVar) {
             case ALLON:
-                intakeLock.setPower(0.9);
-                intakeReg.setPower(0.9);
+                intakeLock.setPower(1);
+                intakeReg.setPower(1);
 
 
                 break;
             case FRONTON:
-                intakeReg.setPower(0.75);
+                intakeReg.setPower(1);
                 break;
 
             case OFF:
