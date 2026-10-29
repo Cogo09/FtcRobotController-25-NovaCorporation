@@ -65,6 +65,7 @@ public class Servosub {
         ramp = hwMap.get(Servo.class, "rampservo");
         ramp2 = hwMap.get(Servo.class, "rampservo2");
         turretvert = hwMap.get(Servo.class, "turretvert");
+        ramp2.setDirection(Servo.Direction.REVERSE);
 
 
     }
@@ -76,12 +77,12 @@ public class Servosub {
         switch (RampStateVar) {
             case UP:
                 setpose(ramp, SERVOUTIL.rampup);//actually close increase to close more
-                setpose(ramp2, SERVOUTIL.rampup);
+                setpose(ramp2, SERVOUTIL.rampup2);
 
                 break;
             case DOWN:
                 setpose(ramp, SERVOUTIL.rampdown);//actually open decrease to open more
-                setpose(ramp2, SERVOUTIL.rampdown);
+                setpose(ramp2, SERVOUTIL.rampdown2);
                 break;
             case IDLE:
 

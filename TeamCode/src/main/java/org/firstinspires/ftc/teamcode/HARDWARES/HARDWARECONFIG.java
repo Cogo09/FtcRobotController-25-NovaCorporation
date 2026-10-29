@@ -202,24 +202,24 @@ public class HARDWARECONFIG {
         } else {
             indicator = 0;
         }
-        if (opMode.gamepad1.right_trigger > 0) {
+        if (opMode.gamepad2.right_trigger > 0) {
             powersub.extrapower();
-        } else if (opMode.gamepad1.left_trigger > 0) {
+        } else if (opMode.gamepad2.left_trigger > 0) {
             powersub.power();
         } else {
             powersub.gunidle();
         }
-        if (opMode.gamepad2.y) {
+        if (opMode.gamepad1.left_bumper) {
             servos.setRampUP();
         }
-        if (opMode.gamepad2.x) {
+        if (opMode.gamepad1.right_bumper) {
             servos.setRampDOWN();
         }
         if (opMode.gamepad2.right_bumper) {
             powersub.allon();
-        } else if (opMode.gamepad2.b){
+        } else if (opMode.gamepad1.right_trigger > 0){
             powersub.fronton();
-        } else if (opMode.gamepad2.a){
+        } else if (opMode.gamepad1.left_trigger > 0){
             powersub.intakereverse();
         }else {
             powersub.intakeidle();
@@ -227,26 +227,23 @@ public class HARDWARECONFIG {
 //        if (opMode.gamepad1.dpad_up) {
 //            shootersub.shootlock(cluster.getRange());
 //        }
-        if (opMode.gamepad1.dpad_down) {
-
+        if (opMode.gamepad2.dpad_down) {
             shootersub.shootunlock();
             shootersub.shootlock(270.0);
         }
-        if (opMode.gamepad1.dpad_left) {
-
+        if (opMode.gamepad2.dpad_left) {
             shootersub.shootunlock();
             shootersub.shootlock(180.0);
         }
-        if (opMode.gamepad1.dpad_right) {
-
+        if (opMode.gamepad2.dpad_right) {
             shootersub.shootunlock();
             shootersub.shootlock(350.0);
         }
-        if (opMode.gamepad1.a) {
+        if (opMode.gamepad2.a) {
             shootersub.shootunlock();
             shootersub.shootlock(90.0);
         }
-        if (opMode.gamepad1.x) {
+        if (opMode.gamepad2.x) {
             servos.setVertBOTTOM();
         }
 
@@ -284,7 +281,7 @@ public class HARDWARECONFIG {
 //        }
 
 
-        if (opMode.gamepad1.y) {
+        if (opMode.gamepad2.y) {
             servos.setVertTOP();
         }
 //        if (opMode.gamepad1.b) { // Hold button to auto-aim
@@ -308,7 +305,7 @@ public class HARDWARECONFIG {
 //                shootersub.uplock(100.0);
 //            }
 //        }
-        if (opMode.gamepad1.dpad_up) {
+        if (opMode.gamepad2.dpad_up) {
             aimbot = true;
         }
 
