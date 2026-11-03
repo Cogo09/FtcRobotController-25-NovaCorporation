@@ -87,8 +87,8 @@ public class PowerSUB {
         intakeLock.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeLock.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeReg.setDirection(DcMotorSimple.Direction.REVERSE);
-        shooterL.setDirection(DcMotorSimple.Direction.REVERSE);
-        shooterR.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterL.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterR.setDirection(DcMotorSimple.Direction.REVERSE);
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(FlyUTIL.p, 0, 0, FlyUTIL.f);
         shooterL.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooterR.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -125,9 +125,9 @@ public class PowerSUB {
 
         switch (gunStateVar) {
             case ON:
-                shooterL.setVelocity(0.75 * FlyUTIL.highvelo);
+                shooterL.setVelocity(0.5 * FlyUTIL.highvelo);
 
-                shooterR.setVelocity(0.75 * FlyUTIL.highvelo);
+                shooterR.setVelocity(0.5 * FlyUTIL.highvelo);
                 break;
             case OFF:
                 shooterL.setVelocity(0.0);
@@ -144,9 +144,9 @@ public class PowerSUB {
                 break;
 
             case EXTRA:
-                shooterR.setVelocity(0.53 * FlyUTIL.highvelo);
+                shooterR.setVelocity(0.572 * FlyUTIL.highvelo);
 
-                shooterL.setVelocity(0.53 * FlyUTIL.highvelo);
+                shooterL.setVelocity(0.572 * FlyUTIL.highvelo);
                 break;
             case IDLE:
                 shooterR.setVelocity(0.0 * FlyUTIL.highvelo);

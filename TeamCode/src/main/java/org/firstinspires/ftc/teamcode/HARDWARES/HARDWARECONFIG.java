@@ -28,8 +28,8 @@ import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
 
 public class HARDWARECONFIG {
-    //LLcluster cluster = new LLcluster();
-    Cluster cluster = new Cluster();
+    LLcluster cluster = new LLcluster();
+    //Cluster cluster = new Cluster();
     boolean slowmode = false;
     Telemetry telemetry = null;
     LinearOpMode opMode = null;
@@ -209,17 +209,17 @@ public class HARDWARECONFIG {
         } else {
             powersub.gunidle();
         }
-        if (opMode.gamepad1.left_bumper) {
+        if (opMode.gamepad1.left_trigger >0 ) {
             servos.setRampUP();
         }
-        if (opMode.gamepad1.right_bumper) {
+        if (opMode.gamepad1.right_trigger>0) {
             servos.setRampDOWN();
         }
         if (opMode.gamepad2.right_bumper) {
             powersub.allon();
-        } else if (opMode.gamepad1.right_trigger > 0){
+        } else if (opMode.gamepad1.right_bumper){
             powersub.fronton();
-        } else if (opMode.gamepad1.left_trigger > 0){
+        } else if (opMode.gamepad1.left_bumper){
             powersub.intakereverse();
         }else {
             powersub.intakeidle();
@@ -317,7 +317,7 @@ public class HARDWARECONFIG {
 
                 // Get the horizontal offset (you must add this method to your Cluster class)
                 double tagBearing = cluster.getBearing();
-                if (Math.abs(tagBearing) > 5) {
+                if (Math.abs(tagBearing) > 2) {
                     double newTarget = shootersub.getcurrentPosition() - (tagBearing);
                     shootersub.shootlock(newTarget);
                 }
