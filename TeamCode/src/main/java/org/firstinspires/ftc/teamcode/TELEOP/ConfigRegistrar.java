@@ -16,7 +16,9 @@ public final class ConfigRegistrar {
     static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
             .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 2", 1)
             //.addCamera("Webcam 1","UC684")
-            .addCamera("limelight", "172.29.0.21")
+            .addModule_detect() // will automatically detect using the scan config
+            .addIMU_detect(ConfigMaker.ModuleType.CONTROL_HUB)// ^ same
+            .addCamera_detectSN()
             .addMotor("frontLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 0)
             .addMotor("backLeftMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 1)
             .addMotor("frontRightMotor", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.MotorType.goBILDA5201SeriesMotor, 2)
