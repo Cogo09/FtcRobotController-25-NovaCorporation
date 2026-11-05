@@ -98,11 +98,44 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
         drivefinished = true;
         Actions.runBlocking(
                 new SequentialAction(
-                        drive.actionBuilder(new Pose2d(-56, 60, Math.toRadians(270)))
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(0)), Math.toRadians(270))
-                                .build(),
-                        endAction()
-                        //!SHOT^^^
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(-56, 60, Math.toRadians(270)))
+                                        .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(0)), Math.toRadians(270))
+                                        .build(),
+                                endAction()
+                                //!SHOT^^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
+                                        .lineToX(50)
+                                        .splineToLinearHeading(new Pose2d(45, 60, Math.toRadians(270)), Math.toRadians(0))
+                                        .build(),
+                                endAction()
+                                //!PARK^^^
+                        )
+                )
+        );
+    }
+
+    public void RED1() {
+        drivefinished = true;
+        Actions.runBlocking(
+                new SequentialAction(
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(56, -60, Math.toRadians(90)))
+                                        .splineToLinearHeading(new Pose2d(62, -12, Math.toRadians(180)), Math.toRadians(0))
+                                        .build(),
+                                endAction()
+                                //!SHOT^^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
+                                        .lineToX(-58)
+                                        .splineToLinearHeading(new Pose2d(-34, -65, Math.toRadians(90)), Math.toRadians(270))
+                                        .build(),
+                                endAction()
+                                //!PARK^^^
+                        )
                 )
         );
     }
@@ -161,6 +194,64 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
                                 drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
                                         .lineToX(50)
                                         .splineToLinearHeading(new Pose2d(45, 60, Math.toRadians(270)), Math.toRadians(0))
+                                        .build(),
+                                endAction()
+                                //!PARK^^^
+                        )
+                ));
+    }
+
+    public void REDF3() {
+        drivefinished = true;
+        Actions.runBlocking(
+                new SequentialAction(
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(56, -60, Math.toRadians(90)))
+                                        .splineToLinearHeading(new Pose2d(62, -12, Math.toRadians(180)), Math.toRadians(0))
+                                        .build(),
+                                endAction()
+                                //!SHOT^^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(-60, 12, Math.toRadians(0)))
+                                        .lineToX(58)
+                                        .splineToLinearHeading(new Pose2d(25, -52, Math.toRadians(270)), Math.toRadians(270))
+                                        .lineToY(-60)
+                                        .build(),
+                                endAction()
+                                //!COLLECTION^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(-26, 55, Math.toRadians(90)))
+                                        .lineToY(-52)
+                                        .splineToLinearHeading(new Pose2d(-45, -34, Math.toRadians(0)), Math.toRadians(0))
+                                        .splineToLinearHeading(new Pose2d(-62, -10, Math.toRadians(0)), Math.toRadians(180))
+                                        .build(),
+                                endAction()
+                                //!SECONDSHOT^^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
+                                        .lineToX(58)
+                                        .turnTo(Math.toRadians(270))
+                                        .lineToY(-60)
+                                        .build(),
+                                endAction()
+                                //!COLLECTION^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(-60, 40, Math.toRadians(90)))
+                                        .lineToY(-55)
+                                        .splineToLinearHeading(new Pose2d(-45, -34, Math.toRadians(0)), Math.toRadians(90))
+                                        .splineToLinearHeading(new Pose2d(-62, -10, Math.toRadians(0)), Math.toRadians(180))
+                                        .build(),
+                                endAction()
+                                //!THIRD SHOT^^^
+                        ),
+                        new SequentialAction(
+                                drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
+                                        .lineToX(-58)
+                                        .splineToLinearHeading(new Pose2d(-34, -65, Math.toRadians(90)), Math.toRadians(270))
                                         .build(),
                                 endAction()
                                 //!PARK^^^

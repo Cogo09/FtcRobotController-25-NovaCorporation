@@ -38,32 +38,28 @@ public class MyClass {
                 .setConstraints(120, 120, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-56, 60, Math.toRadians(270)))
-                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(0)), Math.toRadians(270))
-                //First shot here
-                .lineToY(20)
-                .splineToLinearHeading(new Pose2d(-26, 45, Math.toRadians(90)), Math.toRadians(270))
-                .lineToY(55)
-                //collection here
-                .lineToY(50)
-                .splineToLinearHeading(new Pose2d(45, 40, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(180)), Math.toRadians(180))
-                .lineToX(60)
-                //second shot here
-                .lineToX(50)
-                .splineToLinearHeading(new Pose2d(10, 45, Math.toRadians(90)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-60, 40, Math.toRadians(90)), Math.toRadians(270))
-                .lineToY(60)
-                //collection here
-                .lineToY(50)
-                .splineToLinearHeading(new Pose2d(10, 45, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(55, 10, Math.toRadians(180)), Math.toRadians(180))
-                .lineToX(60)
-                //third shot here
-                .lineToX(50)
-                .splineToLinearHeading(new Pose2d(45, 60, Math.toRadians(270)), Math.toRadians(0))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(56, -60, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(62, -12, Math.toRadians(180)), Math.toRadians(0))
+                //SHOT
+                .lineToX(58)
+                .splineToLinearHeading(new Pose2d(25, -52, Math.toRadians(270)), Math.toRadians(270))
+                .lineToY(-60)
+                //Collection
+                .lineToY(-52)
+                .splineToLinearHeading(new Pose2d(-45, -34, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-62, -10, Math.toRadians(0)), Math.toRadians(180))
+                //SHOT
+                .lineToX(58)
+                .turnTo(Math.toRadians(270))
+                .lineToY(-60)
+                //collection
+                        .lineToY(-55)
+                .splineToLinearHeading(new Pose2d(-45, -34, Math.toRadians(0)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-62, -10, Math.toRadians(0)), Math.toRadians(180))
+                //SHOT
+                        .lineToX(-58)
+                .splineToLinearHeading(new Pose2d(-34, -65, Math.toRadians(90)), Math.toRadians(270))
                 //park
-
 
 
 //                .turn(Math.toRadians(90))
