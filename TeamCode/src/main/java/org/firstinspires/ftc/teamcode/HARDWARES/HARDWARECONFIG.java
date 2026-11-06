@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
 import org.gentrifiedApps.gentrifiedAppsUtil.hardware.voltage.VoltageCompensator;
+import org.gentrifiedApps.gentrifiedAppsUtil.hardware.voltage.VoltageTracker;
 
 public class HARDWARECONFIG {
     LLcluster cluster = new LLcluster();
@@ -42,6 +44,8 @@ public class HARDWARECONFIG {
     DcMotor backLeftMotor = null;
     DcMotor frontRightMotor = null;
     DcMotor backRightMotor = null;
+    Limelight3A limelight = null;
+
 
     double heading = 0;
     double distance = 0;
@@ -53,6 +57,7 @@ public class HARDWARECONFIG {
     double y = 0;
     double indicator = 0;
     public boolean aimbot = false;
+
 
 
     double color = 0;
@@ -74,6 +79,7 @@ public class HARDWARECONFIG {
         shootersub.init(hwmap);
 
     }
+
 
     Action t = null;
 
@@ -117,6 +123,7 @@ public class HARDWARECONFIG {
 
         elapsedTime = new ElapsedTime();
     }
+
 
 
     public static String currentpose = "currentpose";

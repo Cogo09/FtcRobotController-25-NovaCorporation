@@ -16,6 +16,7 @@ public final class ConfigRegistrar {
     static ConfigMaker config = new ConfigMaker("PROPERTY OF NOVA CORP")
             .addModule(ConfigMaker.ModuleType.EXPANSION_HUB, "Expansion Hub 2", 1)
             //.addCamera("Webcam 1","UC684")
+            .addLL_detect()
             .addModule_detect() // will automatically detect using the scan config
             .addIMU_detect(ConfigMaker.ModuleType.CONTROL_HUB)// ^ same
             .addCamera_detectSN()
@@ -34,8 +35,7 @@ public final class ConfigRegistrar {
             .addDevice("turretright", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.ContinuousRotationServo, 1)
             .addDevice("turretleftEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,0)
             .addDevice("turretrightEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,1)
-            .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2)
-            .addDevice("imu", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.REV_INTERNAL_BHI260_IMU, 0);
+            .addDevice("turretvertEncoder", ConfigMaker.ModuleType.CONTROL_HUB, ConfigMaker.DeviceType.AnalogInput,2);
 
 
 

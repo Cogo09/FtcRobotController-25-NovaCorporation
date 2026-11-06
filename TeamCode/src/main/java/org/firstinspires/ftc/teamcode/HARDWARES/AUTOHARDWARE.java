@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +17,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+
+import java.util.List;
 
 public class AUTOHARDWARE extends HARDWARECONFIG {
     Pose2d startPose = null;
@@ -100,10 +103,23 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
                 new SequentialAction(
                         new SequentialAction(
                                 drive.actionBuilder(new Pose2d(-56, 60, Math.toRadians(270)))
-                                        .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(0)), Math.toRadians(270))
+                                        .splineToLinearHeading(new Pose2d(-60, 8, Math.toRadians(0)), Math.toRadians(270))
                                         .build(),
                                 endAction()
                                 //!SHOT^^^
+                        ),
+                        new SequentialAction(
+                                powersub.gunAction(List.of(() -> powersub.extrapower()))
+                                ),
+                        new SleepAction(1.0),
+                        new SequentialAction(
+                                powersub.gunAction(List.of(() -> powersub.allon()))
+                                ),
+                        new SleepAction(1.0),
+                        new SequentialAction(
+                                powersub.gunAction(List.of(() -> powersub.gunoff())),
+                                powersub.gunAction(List.of(() -> powersub.intakeoff()))
+
                         ),
                         new SequentialAction(
                                 drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
