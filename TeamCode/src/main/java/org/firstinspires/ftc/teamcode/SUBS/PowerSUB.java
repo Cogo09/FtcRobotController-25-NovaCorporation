@@ -144,9 +144,9 @@ public class PowerSUB {
                 break;//
 
             case EXTRA:
-                shooterR.setVelocity(0.572 * FlyUTIL.highvelo);
+                shooterR.setVelocity(0.5675 * FlyUTIL.highvelo);
 
-                shooterL.setVelocity(0.572 * FlyUTIL.highvelo);
+                shooterL.setVelocity(0.5675 * FlyUTIL.highvelo);
                 break;
             case IDLE:
                 shooterR.setVelocity(0.0 * FlyUTIL.highvelo);

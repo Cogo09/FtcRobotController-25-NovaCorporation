@@ -12,6 +12,6 @@ public class SERVOUTIL {
     public static double rampdown2 = 145;
     public static double rampup2 = 70;
     public static double turretverttop = 67;
-    public static double turretvertbottom = 10;
+    public static double turretvertbottom = 5;
 
 }

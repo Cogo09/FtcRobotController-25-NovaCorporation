@@ -178,7 +178,7 @@ public class HARDWARECONFIG {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double multiplier = 1;
+        double multiplier = 0.5;
         if (slowmode) {
             multiplier = slowmodemultiplier;
         }
