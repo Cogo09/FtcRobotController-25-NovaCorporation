@@ -26,6 +26,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
+import org.gentrifiedApps.gentrifiedAppsUtil.hardware.voltage.VoltageCompensator;
 
 public class HARDWARECONFIG {
     LLcluster cluster = new LLcluster();
@@ -86,6 +87,7 @@ public class HARDWARECONFIG {
         backLeftMotor = hwmap.dcMotor.get("backLeftMotor");
         frontRightMotor = hwmap.dcMotor.get("frontRightMotor");
         backRightMotor = hwmap.dcMotor.get("backRightMotor");
+
 
         dash = FtcDashboard.getInstance();
 
@@ -168,7 +170,8 @@ public class HARDWARECONFIG {
             slowmode = !slowmode;
         }
         touchpadwpressed = touchpadpressed;
-        double slowmodemultiplier = 0.8;
+        double slowmodemultiplier = 0.5;
+
 
 
         touchpadwpressed = touchpadpressed;
@@ -178,7 +181,7 @@ public class HARDWARECONFIG {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double multiplier = 0.5;
+        double multiplier = 1;
         if (slowmode) {
             multiplier = slowmodemultiplier;
         }
@@ -191,6 +194,7 @@ public class HARDWARECONFIG {
 
 
         double armpower = 0;
+
 
 
 //
@@ -229,7 +233,7 @@ public class HARDWARECONFIG {
 //        }
         if (opMode.gamepad2.dpad_down) {
             shootersub.shootunlock();
-            shootersub.shootlock(270.0);
+            shootersub.shootlock(280);
         }
         if (opMode.gamepad2.dpad_left) {
             shootersub.shootunlock();
