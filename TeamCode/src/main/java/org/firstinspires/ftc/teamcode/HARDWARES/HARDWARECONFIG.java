@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,6 +46,8 @@ public class HARDWARECONFIG {
     DcMotor frontRightMotor = null;
     DcMotor backRightMotor = null;
     Limelight3A limelight = null;
+
+    public LLResult limelightResult = null;
 
 
     double heading = 0;
@@ -103,7 +106,7 @@ public class HARDWARECONFIG {
         drive = new MecanumDrive(hwmap, (Pose2d) blackboard.getOrDefault(currentpose, new Pose2d(0, 0, 0)));
 
         // t = Turn(1.7);
-//         limelight = hwmap.get(Limelight3A.class, "limelight");
+
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -117,6 +120,9 @@ public class HARDWARECONFIG {
 
         cluster.init(hwmap);
         cluster.sendToDash();
+
+
+
 
 
 //
@@ -156,6 +162,9 @@ public class HARDWARECONFIG {
         telemetry.addData("roll", cluster.getRange());
         telemetry.addData("dist", cluster.getDistance());
         telemetry.addData("bearing", cluster.getBearing());
+        // --- Limelight Telemetry Section ---
+
+        cluster.telemetry(telemetry); // Calls LLcluster's built-in telemetry!
         shootersub.telemetry(telemetry);
         powersub.telemetry(telemetry);
 
@@ -182,6 +191,7 @@ public class HARDWARECONFIG {
 
 
         touchpadwpressed = touchpadpressed;
+
 
 
         // Denominator is the largest motor power (absolute value) or 1
