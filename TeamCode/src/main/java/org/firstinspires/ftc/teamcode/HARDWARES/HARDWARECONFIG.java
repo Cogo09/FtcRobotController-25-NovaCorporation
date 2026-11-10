@@ -147,7 +147,18 @@ public class HARDWARECONFIG {
     }
 
     public double getrange() {
-        return cluster.getRange();
+        return cluster.getDistance();
+    }
+    public void sendDashboardPacket() {
+        TelemetryPacket packet = new TelemetryPacket();
+
+        // Pass numerical variables to the packet for live graphing
+        packet.put("Limelight Distance (in)", cluster.getDistance());
+        packet.put("Limelight Bearing (deg)", cluster.getBearing());
+        packet.put("Target Tag Detected", cluster.isTagDetected() ? 1 : 0);
+
+        // Dispatch the packet to the dashboard server
+        dash.sendTelemetryPacket(packet);
     }
 
 
@@ -159,8 +170,6 @@ public class HARDWARECONFIG {
         telemetry.addData("x", x);
         telemetry.addData("y", y);
         telemetry.addData("indicator", indicator);
-        telemetry.addData("roll", cluster.getRange());
-        telemetry.addData("dist", cluster.getDistance());
         telemetry.addData("bearing", cluster.getBearing());
         // --- Limelight Telemetry Section ---
 
@@ -176,6 +185,7 @@ public class HARDWARECONFIG {
 
     public void dobulk() {//
         imc.checkHasMovedOnInit();
+        cluster.update();
         //heading = getheadingfromAT();
         // distance = getrangefromAT();
         double y = -opMode.gamepad1.left_stick_y; // Remember, Y stick value is reversed
@@ -269,32 +279,7 @@ public class HARDWARECONFIG {
         }
 
 
-        if (aimbot == true) {
-            if (cluster.getDistance() > 45 && cluster.getDistance() < 50) {
-                servos.setVertBOTTOM();
-            }
-            if (cluster.getDistance() > 40 && cluster.getDistance() < 44) {
-                servos.setVertX(0);
-            }
-            if (cluster.getDistance() > 35 && cluster.getDistance() < 39) {
-                servos.setVertX(0.25);
-            }
-            if (cluster.getDistance() > 30 && cluster.getDistance() < 34) {
-                servos.setVertX(0.5);
-            }
-            if (cluster.getDistance() > 25 && cluster.getDistance() < 29) {
-                servos.setVertX(0.66);
-            }
-            if (cluster.getDistance() > 20 && cluster.getDistance() < 24) {//
-                servos.setVertX(0.75);
-            }
-            if (cluster.getDistance() > 15 && cluster.getDistance() < 19) {
-                servos.setVertX(0.9);
-            }
-            if (cluster.getDistance() > 0 && cluster.getDistance() < 14) {
-                servos.setVertX(1);
-            }
-        }
+
 //        if (opMode.gamepad1.left_stick_button){
 //            shootersub.setVert(-0.5);
 //        }else if (opMode.gamepad1.right_stick_button){
@@ -330,30 +315,94 @@ public class HARDWARECONFIG {
             aimbot = true;
         }
 
-
-        if (aimbot == true) { // Hold button to auto-aim
-
-            // Check if the camera actually sees the tag right now
+        // Unified Aimbot Loop: Handles both Turret Bearing and Hood Servo Distance Tracking
+        if (aimbot) {
             if (cluster.isTagDetected()) {
 
-                // Get the horizontal offset (you must add this method to your Cluster class)
+                // 1. Horizontal Turret Tracking
                 double tagBearing = cluster.getBearing();
-                if (Math.abs(tagBearing) > 2) {
-                    double newTarget = shootersub.getcurrentPosition() - (tagBearing);
+                if (Math.abs(tagBearing) > 1.5) {
+                    double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.7);
                     shootersub.shootlock(newTarget);
                 }
 
-                // Calculate the new absolute target: Current Position + Offset
+                // 2. Distance-Based Hood Servo Adjustment
+                double currentDist = cluster.getDistance();
 
-                // Command the PIDF to hold this new position
-
+                if (currentDist >= 140) {
+                    servos.setVertBOTTOM();
+                } else if (currentDist >= 120) {
+                    servos.setVertX(0.0);
+                } else if (currentDist >= 100) {
+                    servos.setVertX(0.25);
+                } else if (currentDist >= 80) {
+                    servos.setVertX(0.5);
+                } else if (currentDist >= 60) {
+                    servos.setVertX(0.66);
+                } else if (currentDist >= 40) {
+                    servos.setVertX(0.75);
+                } else if (currentDist >= 20) {
+                    servos.setVertX(0.9);
+                } else if (currentDist > 0) {
+                    servos.setVertX(1.0);
+                }
             }
-//                else {
-//                    // Optional: If it loses sight of the tag, stay where it is,
-//                    // or return to a default center position (e.g., 0.0)
-//                    shootersub.shootlock(180.0);
-//                }
         }
+//        if (opMode.gamepad2.dpad_up) {
+//            aimbot = true;
+//        }
+//
+//
+//        if (aimbot == true) { // Hold button to auto-aim
+//
+//            // Check if the camera actually sees the tag right now
+//            if (cluster.isTagDetected()) {
+//
+//                // Get the horizontal offset (you must add this method to your Cluster class)
+//                double tagBearing = cluster.getBearing();
+//                double distance = cluster.getDistance();
+//                if (Math.abs(tagBearing) > 3 && distance > 20) {
+//                    double newTarget = shootersub.getcurrentPosition() - (tagBearing);
+//                    shootersub.shootlock(newTarget);
+//                }
+//
+//                // Calculate the new absolute target: Current Position + Offset
+//
+//                // Command the PIDF to hold this new position
+//
+//            }
+////                else {
+////                    // Optional: If it loses sight of the tag, stay where it is,
+////                    // or return to a default center position (e.g., 0.0)
+////                    shootersub.shootlock(180.0);
+////                }
+//        }
+//        if (aimbot == true) {
+//            if (cluster.getDistance() > 140 && cluster.getDistance() < 160) {
+//                servos.setVertBOTTOM();
+//            }
+//            if (cluster.getDistance() > 120 && cluster.getDistance() < 140) {
+//                servos.setVertX(0);
+//            }
+//            if (cluster.getDistance() > 100 && cluster.getDistance() < 120) {
+//                servos.setVertX(0.25);
+//            }
+//            if (cluster.getDistance() > 80 && cluster.getDistance() < 100) {
+//                servos.setVertX(0.5);
+//            }
+//            if (cluster.getDistance() > 60 && cluster.getDistance() < 80) {
+//                servos.setVertX(0.66);
+//            }
+//            if (cluster.getDistance() > 40 && cluster.getDistance() < 60) {//
+//                servos.setVertX(0.75);
+//            }
+//            if (cluster.getDistance() > 20 && cluster.getDistance() < 40) {
+//                servos.setVertX(0.9);
+//            }
+//            if (cluster.getDistance() > 0 && cluster.getDistance() < 20) {
+//                servos.setVertX(1);
+//            }
+//        }
 
 
 //        if (opMode.gamepad1.left_bumper) {
@@ -408,6 +457,7 @@ public class HARDWARECONFIG {
         servos.update();
         powersub.update();
         buildtelemetry();
+        sendDashboardPacket();
 
     }
 

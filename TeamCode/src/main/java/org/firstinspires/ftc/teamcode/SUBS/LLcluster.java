@@ -25,7 +25,7 @@ public class LLcluster {
     public static Position cameraPosition = new Position(DistanceUnit.INCH, 0, 3, 13.875, 0);
     public static YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, 0, 0, 0);
 
-    CacheManager<Double> range = new CacheManager<>(this::calculateRange);
+    //CacheManager<Double> range = new CacheManager<>(this::calculateRange);
 
     public void init(HardwareMap hwMap) {
         limelight = hwMap.get(Limelight3A.class, "limelight");
@@ -38,7 +38,7 @@ public class LLcluster {
     public void update() {
         if (limelight != null) {
             latestResult = limelight.getLatestResult();
-            range.refreshCache();
+            //range.refreshCache();
         }
     }
 
@@ -46,39 +46,56 @@ public class LLcluster {
         // Left empty for dashboard config integration
     }
 
+//    public double RANGE() {
+//        return range.loadCache();
+//    }
+
+//    private double calculateRange() {
+//        if (latestResult != null && latestResult.isValid()) {
+//            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+//            if (!fiducials.isEmpty()) {
+//                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+//                if (pose != null && pose.getPosition().z != 0) {
+//                    // Use Math.abs because TargetSpace Z is negative in front of the tag
+//                    return Math.abs(pose.getPosition().z) * 39.3701;
+//                }
+//            }
+//        }
+//        return 0.0;
+//    }
+//
+//    public double getDistance() {
+//        return calculateRange();
+//    }
+//
+//    public double getRange() {
+//        if (latestResult != null && latestResult.isValid()) {
+//            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+//            if (!fiducials.isEmpty()) {
+//                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+//                if (pose != null) {
+//                    return pose.getOrientation().getRoll();
+//                }
+//            }
+//        }
+//        return 0.0;
+//    }
+public double getDistance() {
+    if (latestResult != null && latestResult.isValid()) {
+        List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+        if (!fiducials.isEmpty()) {
+            Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+            if (pose != null) {
+                // Convert Z meters to inches and use Math.abs because target space Z is negative
+                return Math.abs(pose.getPosition().z) * 39.3701;
+            }
+        }
+    }
+    return 0.0;
+}
+
     public double RANGE() {
-        return range.loadCache();
-    }
-
-    private double calculateRange() {
-        if (latestResult != null && latestResult.isValid()) {
-            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
-            if (!fiducials.isEmpty()) {
-                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
-                if (pose != null && pose.getPosition().z != 0) {
-                    // Use Math.abs because TargetSpace Z is negative in front of the tag
-                    return Math.abs(pose.getPosition().z) * 39.3701;
-                }
-            }
-        }
-        return 0.0;
-    }
-
-    public double getDistance() {
-        return calculateRange();
-    }
-
-    public double getRange() {
-        if (latestResult != null && latestResult.isValid()) {
-            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
-            if (!fiducials.isEmpty()) {
-                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
-                if (pose != null) {
-                    return pose.getOrientation().getRoll();
-                }
-            }
-        }
-        return 0.0;
+        return getDistance();
     }
 
     public double getBearing() {
@@ -108,7 +125,7 @@ public class LLcluster {
         LLStatus status = limelight.getStatus();
         telemetry.addData("LL Connected", limelight.isConnected());
         telemetry.addData("LL Pipeline", "Index: %d | Type: %s", status.getPipelineIndex(), status.getPipelineType());
-
+        telemetry.addData("distnk", getDistance());
         if (latestResult == null) {
             // If null, start() was not called or polling stopped
             limelight.start();
@@ -141,6 +158,6 @@ public class LLcluster {
             telemetry.addData("Limelight Status", "No valid target in frame");
         }
 
-        telemetry.addData("Cached Range (in)", "%.2f", range.loadCache());
+        telemetry.addData("Cached Range (in)", "%.2f", getDistance());
     }
 }
