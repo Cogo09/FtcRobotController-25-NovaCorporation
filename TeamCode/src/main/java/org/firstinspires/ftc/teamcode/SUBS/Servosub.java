@@ -64,8 +64,9 @@ public class Servosub {
     public Servosub(HardwareMap hwMap) {
         ramp = hwMap.get(Servo.class, "rampservo");
         ramp2 = hwMap.get(Servo.class, "rampservo2");
-        turretvert = hwMap.get(Servo.class, "turretvert");
         ramp2.setDirection(Servo.Direction.REVERSE);
+        ramp.setDirection(Servo.Direction.FORWARD);
+        turretvert = hwMap.get(Servo.class, "turretvert");
 
 
     }

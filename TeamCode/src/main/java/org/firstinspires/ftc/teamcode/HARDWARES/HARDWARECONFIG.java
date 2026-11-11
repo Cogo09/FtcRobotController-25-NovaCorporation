@@ -46,6 +46,8 @@ public class HARDWARECONFIG {
     DcMotor frontRightMotor = null;
     DcMotor backRightMotor = null;
     Limelight3A limelight = null;
+    public boolean isRedAlliance = true; // Default to Red
+    private boolean allianceButtonPreviouslyPressed = false;
 
     public LLResult limelightResult = null;
 
@@ -197,6 +199,15 @@ public class HARDWARECONFIG {
         }
         touchpadwpressed = touchpadpressed;
         double slowmodemultiplier = 0.5;
+        // 1. Alliance Toggle Button (Press Gamepad 1 Back button to switch Red <-> Blue)
+        boolean allianceButtonPressed = opMode.gamepad2.rightStickButtonWasPressed();
+        if (allianceButtonPressed && !allianceButtonPreviouslyPressed) {
+            isRedAlliance = !isRedAlliance;
+        }
+        allianceButtonPreviouslyPressed = allianceButtonPressed;
+
+        // Display current alliance on Driver Station telemetry
+        telemetry.addData("Alliance Mode", isRedAlliance ? "RED ALLIANCE" : "BLUE ALLIANCE");
 
 
 
@@ -314,40 +325,74 @@ public class HARDWARECONFIG {
         if (opMode.gamepad2.dpad_up) {
             aimbot = true;
         }
-
-        // Unified Aimbot Loop: Handles both Turret Bearing and Hood Servo Distance Tracking
+        // 2. Unified Aimbot Loop using Alliance Filtering
         if (aimbot) {
-            if (cluster.isTagDetected()) {
+            // Check specifically for tags matching our alliance
+            if (cluster.isAllianceTagDetected(isRedAlliance)) {
 
-                // 1. Horizontal Turret Tracking
-                double tagBearing = cluster.getBearing();
+                // A. Horizontal Turret Tracking
+                double tagBearing = cluster.getAllianceBearing(isRedAlliance);
                 if (Math.abs(tagBearing) > 1.5) {
                     double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.7);
                     shootersub.shootlock(newTarget);
                 }
 
-                // 2. Distance-Based Hood Servo Adjustment
-                double currentDist = cluster.getDistance();
+                // B. Distance-Based Hood Servo Adjustment
+                double currentDist = cluster.getAllianceDistance(isRedAlliance);
 
                 if (currentDist >= 140) {
                     servos.setVertBOTTOM();
                 } else if (currentDist >= 120) {
                     servos.setVertX(0.0);
                 } else if (currentDist >= 100) {
-                    servos.setVertX(0.25);
+                    servos.setVertX(0.0);
                 } else if (currentDist >= 80) {
-                    servos.setVertX(0.5);
+                    servos.setVertX(0.0);
                 } else if (currentDist >= 60) {
-                    servos.setVertX(0.66);
+                    servos.setVertX(0.0);
                 } else if (currentDist >= 40) {
-                    servos.setVertX(0.75);
+                    servos.setVertX(0.0);
                 } else if (currentDist >= 20) {
-                    servos.setVertX(0.9);
+                    servos.setVertX(0.0);
                 } else if (currentDist > 0) {
-                    servos.setVertX(1.0);
+                    servos.setVertX(0.0);
                 }
             }
         }
+
+        // Unified Aimbot Loop: Handles both Turret Bearing and Hood Servo Distance Tracking
+//        if (aimbot) {
+//            if (cluster.isTagDetected()) {
+//
+//                // 1. Horizontal Turret Tracking
+//                double tagBearing = cluster.getBearing();
+//                if (Math.abs(tagBearing) > 1.5) {
+//                    double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.7);
+//                    shootersub.shootlock(newTarget);
+//                }
+//
+//                // 2. Distance-Based Hood Servo Adjustment
+//                double currentDist = cluster.getDistance();
+//
+//                if (currentDist >= 140) {
+//                    servos.setVertBOTTOM();
+//                } else if (currentDist >= 120) {
+//                    servos.setVertX(0.0);
+//                } else if (currentDist >= 100) {
+//                    servos.setVertX(0.25);
+//                } else if (currentDist >= 80) {
+//                    servos.setVertX(0.5);
+//                } else if (currentDist >= 60) {
+//                    servos.setVertX(0.66);
+//                } else if (currentDist >= 40) {
+//                    servos.setVertX(0.75);
+//                } else if (currentDist >= 20) {
+//                    servos.setVertX(0.9);
+//                } else if (currentDist > 0) {
+//                    servos.setVertX(1.0);
+//                }
+//            }
+//        }
 //        if (opMode.gamepad2.dpad_up) {
 //            aimbot = true;
 //        }

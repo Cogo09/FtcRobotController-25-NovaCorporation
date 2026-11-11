@@ -108,6 +108,54 @@ public double getDistance() {
         }
         return -0.0;
     }
+    // Check if any tag belonging to the active alliance is detected
+    public boolean isAllianceTagDetected(boolean isRedAlliance) {
+        if (latestResult != null && latestResult.isValid()) {
+            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+                int id = fiducial.getFiducialId();
+                if (isRedAlliance) {
+                    // TODO: Put your official Red Alliance AprilTag IDs here
+                    if (id == 31 || id == 32 || id == 35 || id == 36) return true;
+                } else {
+                    // TODO: Put your official Blue Alliance AprilTag IDs here
+                    if (id == 39 || id == 40 || id == 43 || id == 44) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Get bearing exclusively for the correct alliance tag
+    public double getAllianceBearing(boolean isRedAlliance) {
+        if (latestResult != null && latestResult.isValid()) {
+            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+                int id = fiducial.getFiducialId();
+                if (isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) {
+                    return -fiducial.getTargetXDegrees();
+                } else if (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44)) {
+                    return -fiducial.getTargetXDegrees();
+                }
+            }
+        }
+        return 0.0;
+    }
+
+    // Get distance exclusively for the correct alliance tag
+    public double getAllianceDistance(boolean isRedAlliance) {
+        if (latestResult != null && latestResult.isValid()) {
+            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+                int id = fiducial.getFiducialId();
+                if ((isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) ||
+                        (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44))) {
+                    Pose3D pose = fiducial.getCameraPoseTargetSpace();
+                    if (pose != null) {
+                        return Math.abs(pose.getPosition().z) * 39.3701;
+                    }
+                }
+            }
+        }
+        return 0.0;
+    }
 
     public boolean isTagDetected() {
         return latestResult != null && latestResult.isValid() && !latestResult.getFiducialResults().isEmpty();

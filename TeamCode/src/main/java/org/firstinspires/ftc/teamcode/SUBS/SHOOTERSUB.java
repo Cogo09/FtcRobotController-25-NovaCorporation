@@ -119,7 +119,7 @@ public class SHOOTERSUB {
                 val = 0.0;
             }
 
-            val = Math.max(-0.15, Math.min(0.15, val));
+            val = Math.max(-0.4, Math.min(0.4, val));
 
 
             // Send power to the left turret servo
