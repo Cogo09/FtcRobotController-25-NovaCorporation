@@ -42,7 +42,6 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
     private int rightfrontTarget = 0;
     private int backrightTarget = 0;
     private int backleftTarget = 0;
-    private double armMotorTarget = 0;
     public static boolean drivefinished = true;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
@@ -87,6 +86,7 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
     //!help
     public void CLLB() {
         drivefinished = true;
+
         Actions.runBlocking(
                 new SequentialAction(
                         drive.actionBuilder(new Pose2d(-52, -50, Math.toRadians(220)))
