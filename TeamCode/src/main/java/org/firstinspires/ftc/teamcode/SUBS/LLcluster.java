@@ -13,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.gentrifiedApps.gentrifiedAppsUtil.classes.caching.CacheManager;
 
 import java.util.List;
 
@@ -24,8 +23,6 @@ public class LLcluster {
 
     public static Position cameraPosition = new Position(DistanceUnit.INCH, 0, 3, 13.875, 0);
     public static YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, 0, 0, 0);
-
-    //CacheManager<Double> range = new CacheManager<>(this::calculateRange);
 
     public void init(HardwareMap hwMap) {
         limelight = hwMap.get(Limelight3A.class, "limelight");
@@ -38,7 +35,6 @@ public class LLcluster {
     public void update() {
         if (limelight != null) {
             latestResult = limelight.getLatestResult();
-            //range.refreshCache();
         }
     }
 
@@ -46,53 +42,20 @@ public class LLcluster {
         // Left empty for dashboard config integration
     }
 
-//    public double RANGE() {
-//        return range.loadCache();
-//    }
-
-//    private double calculateRange() {
-//        if (latestResult != null && latestResult.isValid()) {
-//            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
-//            if (!fiducials.isEmpty()) {
-//                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
-//                if (pose != null && pose.getPosition().z != 0) {
-//                    // Use Math.abs because TargetSpace Z is negative in front of the tag
-//                    return Math.abs(pose.getPosition().z) * 39.3701;
-//                }
-//            }
-//        }
-//        return 0.0;
-//    }
-//
-//    public double getDistance() {
-//        return calculateRange();
-//    }
-//
-//    public double getRange() {
-//        if (latestResult != null && latestResult.isValid()) {
-//            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
-//            if (!fiducials.isEmpty()) {
-//                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
-//                if (pose != null) {
-//                    return pose.getOrientation().getRoll();
-//                }
-//            }
-//        }
-//        return 0.0;
-//    }
-public double getDistance() {
-    if (latestResult != null && latestResult.isValid()) {
-        List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
-        if (!fiducials.isEmpty()) {
-            Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
-            if (pose != null) {
-                // Convert Z meters to inches and use Math.abs because target space Z is negative
-                return Math.abs(pose.getPosition().z) * 39.3701;
+    public double getDistance() {
+        if (latestResult != null && latestResult.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+            if (!fiducials.isEmpty()) {
+                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+                if (pose != null) {
+                    double x = pose.getPosition().x;
+                    double z = pose.getPosition().z;
+                    return Math.hypot(x, z) * 39.3701;
+                }
             }
         }
+        return 0.0;
     }
-    return 0.0;
-}
 
     public double RANGE() {
         return getDistance();
@@ -108,17 +71,21 @@ public double getDistance() {
         }
         return -0.0;
     }
+
+    private boolean isMatchingAllianceTag(int id, boolean isRedAlliance) {
+        if (isRedAlliance) {
+            return id == 31 || id == 32 || id == 35 || id == 36;
+        } else {
+            return id == 39 || id == 40 || id == 43 || id == 44;
+        }
+    }
+
     // Check if any tag belonging to the active alliance is detected
     public boolean isAllianceTagDetected(boolean isRedAlliance) {
         if (latestResult != null && latestResult.isValid()) {
             for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
-                int id = fiducial.getFiducialId();
-                if (isRedAlliance) {
-                    // TODO: Put your official Red Alliance AprilTag IDs here
-                    if (id == 31 || id == 32 || id == 35 || id == 36) return true;
-                } else {
-                    // TODO: Put your official Blue Alliance AprilTag IDs here
-                    if (id == 39 || id == 40 || id == 43 || id == 44) return true;
+                if (isMatchingAllianceTag(fiducial.getFiducialId(), isRedAlliance)) {
+                    return true;
                 }
             }
         }
@@ -129,10 +96,7 @@ public double getDistance() {
     public double getAllianceBearing(boolean isRedAlliance) {
         if (latestResult != null && latestResult.isValid()) {
             for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
-                int id = fiducial.getFiducialId();
-                if (isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) {
-                    return -fiducial.getTargetXDegrees();
-                } else if (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44)) {
+                if (isMatchingAllianceTag(fiducial.getFiducialId(), isRedAlliance)) {
                     return -fiducial.getTargetXDegrees();
                 }
             }
@@ -140,16 +104,33 @@ public double getDistance() {
         return 0.0;
     }
 
-    // Get distance exclusively for the correct alliance tag
+    // Get entry angle (0 deg = straight on, 45 deg = angled side shot)
+    public double getAllianceEntryAngle(boolean isRedAlliance) {
+        if (latestResult != null && latestResult.isValid()) {
+            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+                if (isMatchingAllianceTag(fiducial.getFiducialId(), isRedAlliance)) {
+                    Pose3D pose = fiducial.getCameraPoseTargetSpace();
+                    if (pose != null && pose.getPosition().z != 0) {
+                        double x = Math.abs(pose.getPosition().x);
+                        double z = Math.abs(pose.getPosition().z);
+                        return Math.toDegrees(Math.atan2(x, z));
+                    }
+                }
+            }
+        }
+        return 0.0;
+    }
+
+    // Get true diagonal distance exclusively for the correct alliance tag
     public double getAllianceDistance(boolean isRedAlliance) {
         if (latestResult != null && latestResult.isValid()) {
             for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
-                int id = fiducial.getFiducialId();
-                if ((isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) ||
-                        (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44))) {
+                if (isMatchingAllianceTag(fiducial.getFiducialId(), isRedAlliance)) {
                     Pose3D pose = fiducial.getCameraPoseTargetSpace();
                     if (pose != null) {
-                        return Math.abs(pose.getPosition().z) * 39.3701;
+                        double x = pose.getPosition().x;
+                        double z = pose.getPosition().z;
+                        return Math.hypot(x, z) * 39.3701;
                     }
                 }
             }
@@ -167,7 +148,6 @@ public double getDistance() {
             return;
         }
 
-        // Always fetch a fresh result when building telemetry
         latestResult = limelight.getLatestResult();
 
         LLStatus status = limelight.getStatus();
@@ -175,7 +155,6 @@ public double getDistance() {
         telemetry.addData("LL Pipeline", "Index: %d | Type: %s", status.getPipelineIndex(), status.getPipelineType());
         telemetry.addData("distnk", getDistance());
         if (latestResult == null) {
-            // If null, start() was not called or polling stopped
             limelight.start();
             telemetry.addData("Limelight Status", "Result is NULL (Calling start()...)");
             return;
@@ -196,10 +175,15 @@ public double getDistance() {
 
                 Pose3D pose = fiducial.getCameraPoseTargetSpace();
                 if (pose != null) {
+                    double x = pose.getPosition().x;
+                    double z = pose.getPosition().z;
+                    double entryAngle = (z != 0) ? Math.toDegrees(Math.atan2(Math.abs(x), Math.abs(z))) : 0.0;
                     telemetry.addLine(String.format("XYZ (inch): %6.1f %6.1f %6.1f",
-                            pose.getPosition().x * 39.3701,
+                            x * 39.3701,
                             pose.getPosition().y * 39.3701,
-                            Math.abs(pose.getPosition().z) * 39.3701));
+                            Math.abs(z) * 39.3701));
+                    telemetry.addLine(String.format("True Dist: %.1f in | Entry Angle: %.1f deg",
+                            Math.hypot(x, z) * 39.3701, entryAngle));
                 }
             }
         } else {
@@ -209,3 +193,239 @@ public double getDistance() {
         telemetry.addData("Cached Range (in)", "%.2f", getDistance());
     }
 }
+
+
+
+
+
+
+
+
+//package org.firstinspires.ftc.teamcode.SUBS;
+//
+//import com.acmerobotics.dashboard.config.Config;
+//import com.qualcomm.hardware.limelightvision.LLResult;
+//import com.qualcomm.hardware.limelightvision.LLResultTypes;
+//import com.qualcomm.hardware.limelightvision.LLStatus;
+//import com.qualcomm.hardware.limelightvision.Limelight3A;
+//import com.qualcomm.robotcore.hardware.HardwareMap;
+//
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
+//import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+//import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+//import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+//import org.firstinspires.ftc.robotcore.external.navigation.Position;
+//import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+//import org.gentrifiedApps.gentrifiedAppsUtil.classes.caching.CacheManager;
+//
+//import java.util.List;
+//
+//@Config
+//public class LLcluster {
+//    private Limelight3A limelight;
+//    private LLResult latestResult = null; // Cached once per loop
+//
+//    public static Position cameraPosition = new Position(DistanceUnit.INCH, 0, 3, 13.875, 0);
+//    public static YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, 0, 0, 0);
+//
+//    //CacheManager<Double> range = new CacheManager<>(this::calculateRange);
+//
+//    public void init(HardwareMap hwMap) {
+//        limelight = hwMap.get(Limelight3A.class, "limelight");
+//        limelight.setPollRateHz(100);
+//        limelight.pipelineSwitch(0); // Make sure your AprilTag pipeline is in slot 0 in the Web UI!
+//        limelight.start();
+//    }
+//
+//    // Call this ONCE per loop inside HARDWARECONFIG.dobulk()
+//    public void update() {
+//        if (limelight != null) {
+//            latestResult = limelight.getLatestResult();
+//            //range.refreshCache();
+//        }
+//    }
+//
+//    public void sendToDash() {
+//        // Left empty for dashboard config integration
+//    }
+//
+////    public double RANGE() {
+////        return range.loadCache();
+////    }
+//
+////    private double calculateRange() {
+////        if (latestResult != null && latestResult.isValid()) {
+////            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+////            if (!fiducials.isEmpty()) {
+////                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+////                if (pose != null && pose.getPosition().z != 0) {
+////                    // Use Math.abs because TargetSpace Z is negative in front of the tag
+////                    return Math.abs(pose.getPosition().z) * 39.3701;
+////                }
+////            }
+////        }
+////        return 0.0;
+////    }
+////
+////    public double getDistance() {
+////        return calculateRange();
+////    }
+////
+////    public double getRange() {
+////        if (latestResult != null && latestResult.isValid()) {
+////            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+////            if (!fiducials.isEmpty()) {
+////                Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+////                if (pose != null) {
+////                    return pose.getOrientation().getRoll();
+////                }
+////            }
+////        }
+////        return 0.0;
+////    }
+//public double getDistance() {
+//    if (latestResult != null && latestResult.isValid()) {
+//        List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+//        if (!fiducials.isEmpty()) {
+//            Pose3D pose = fiducials.get(0).getCameraPoseTargetSpace();
+//            if (pose != null) {
+//                // Convert Z meters to inches and use Math.abs because target space Z is negative
+//                return Math.abs(pose.getPosition().z) * 39.3701;
+//            }
+//        }
+//    }
+//    return 0.0;
+//}
+//
+//    public double RANGE() {
+//        return getDistance();
+//    }
+//
+//    public double getBearing() {
+//        if (latestResult != null && latestResult.isValid()) {
+//            List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+//            if (!fiducials.isEmpty()) {
+//                return -fiducials.get(0).getTargetXDegrees();
+//            }
+//            return -latestResult.getTx();
+//        }
+//        return -0.0;
+//    }
+//    // Check if any tag belonging to the active alliance is detected
+//    public boolean isAllianceTagDetected(boolean isRedAlliance) {
+//        if (latestResult != null && latestResult.isValid()) {
+//            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+//                int id = fiducial.getFiducialId();
+//                if (isRedAlliance) {
+//                    // TODO: Put your official Red Alliance AprilTag IDs here
+//                    if (id == 31 || id == 32 || id == 35 || id == 36) return true;
+//                } else {
+//                    // TODO: Put your official Blue Alliance AprilTag IDs here
+//                    if (id == 39 || id == 40 || id == 43 || id == 44) return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    // Get bearing exclusively for the correct alliance tag
+//    public double getAllianceBearing(boolean isRedAlliance) {
+//        if (latestResult != null && latestResult.isValid()) {
+//            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+//                int id = fiducial.getFiducialId();
+//                if (isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) {
+//                    return -fiducial.getTargetXDegrees();
+//                } else if (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44)) {
+//                    return -fiducial.getTargetXDegrees();
+//                }
+//            }
+//        }
+//        return 0.0;
+//    }
+//    public double getAllianceEntryAngle(boolean isRedAlliance) {
+//        if (latestResult != null && latestResult.isValid()) {
+//            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+//                int id = fiducial.getFiducialId();
+//                if ((isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) ||
+//                        (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44))) {
+//                    Pose3D pose = fiducial.getCameraPoseTargetSpace();
+//                    if (pose != null && pose.getPosition().z != 0) {
+//                        double x = Math.abs(pose.getPosition().x);
+//                        double z = Math.abs(pose.getPosition().z);
+//                        return Math.toDegrees(Math.atan2(x, z));
+//                    }
+//                }
+//            }
+//        }
+//        return 0.0;
+//    }
+//
+//    // Get distance exclusively for the correct alliance tag
+//    public double getAllianceDistance(boolean isRedAlliance) {
+//        if (latestResult != null && latestResult.isValid()) {
+//            for (LLResultTypes.FiducialResult fiducial : latestResult.getFiducialResults()) {
+//                int id = fiducial.getFiducialId();
+//                if ((isRedAlliance && (id == 31 || id == 32 || id == 35 || id == 36)) ||
+//                        (!isRedAlliance && (id == 39 || id == 40 || id == 43 || id == 44))) {
+//                    Pose3D pose = fiducial.getCameraPoseTargetSpace();
+//                    if (pose != null) {
+//                        return Math.abs(pose.getPosition().z) * 39.3701;
+//                    }
+//                }
+//            }
+//        }
+//        return 0.0;
+//    }
+//
+//    public boolean isTagDetected() {
+//        return latestResult != null && latestResult.isValid() && !latestResult.getFiducialResults().isEmpty();
+//    }
+//
+//    public void telemetry(Telemetry telemetry) {
+//        if (limelight == null) {
+//            telemetry.addData("Limelight", "NOT INITIALIZED");
+//            return;
+//        }
+//
+//        // Always fetch a fresh result when building telemetry
+//        latestResult = limelight.getLatestResult();
+//
+//        LLStatus status = limelight.getStatus();
+//        telemetry.addData("LL Connected", limelight.isConnected());
+//        telemetry.addData("LL Pipeline", "Index: %d | Type: %s", status.getPipelineIndex(), status.getPipelineType());
+//        telemetry.addData("distnk", getDistance());
+//        if (latestResult == null) {
+//            // If null, start() was not called or polling stopped
+//            limelight.start();
+//            telemetry.addData("Limelight Status", "Result is NULL (Calling start()...)");
+//            return;
+//        }
+//
+//        List<LLResultTypes.FiducialResult> fiducials = latestResult.getFiducialResults();
+//        telemetry.addData("LL isValid()", latestResult.isValid());
+//        telemetry.addData("LL Fiducial Count", fiducials.size());
+//        telemetry.addData("LL Staleness (ms)", latestResult.getStaleness());
+//
+//        if (latestResult.isValid() || !fiducials.isEmpty()) {
+//            telemetry.addData("Limelight Status", "TARGET LOCKED");
+//            telemetry.addData("LL tx / ty (deg)", "%.2f / %.2f", latestResult.getTx(), latestResult.getTy());
+//
+//            for (LLResultTypes.FiducialResult fiducial : fiducials) {
+//                telemetry.addLine(String.format("==== Tag ID (%d) ====", fiducial.getFiducialId()));
+//                telemetry.addLine(String.format("Target X/Y (deg): %6.1f %6.1f", fiducial.getTargetXDegrees(), fiducial.getTargetYDegrees()));
+//
+//                Pose3D pose = fiducial.getCameraPoseTargetSpace();
+//                if (pose != null) {
+//                    telemetry.addLine(String.format("XYZ (inch): %6.1f %6.1f %6.1f",
+//                            pose.getPosition().x * 39.3701,
+//                            pose.getPosition().y * 39.3701,
+//                            Math.abs(pose.getPosition().z) * 39.3701));
+//                }
+//            }
+//        } else {
+//            telemetry.addData("Limelight Status", "No valid target in frame");
+//        }
+//
+//        telemetry.addData("Cached Range (in)", "%.2f", getDistance());
+//    }
+//}

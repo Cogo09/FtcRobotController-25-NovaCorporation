@@ -328,6 +328,7 @@ public class HARDWARECONFIG {
 
                 // B. Distance-Based Hood Servo Adjustment
                 double currentDist = cluster.getAllianceDistance(isRedAlliance);
+                double entryAngle = cluster.getAllianceEntryAngle(isRedAlliance); // <-- ADD THIS LINE
 
                 if (currentDist >= 100) {
                     servos.setVertBOTTOM();
@@ -338,7 +339,7 @@ public class HARDWARECONFIG {
                 }
 
                 if (opMode.gamepad2.right_trigger > 0) {
-                    powersub.setPowerByDistance(currentDist); // Scales power based on Limelight distance
+                    powersub.setPowerByDistance(currentDist, entryAngle); // Scales power based on Limelight distance
                 } else {
                     powersub.gunidle(); // Turns off/idles the flywheels when you let go
                 }

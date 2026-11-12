@@ -20,7 +20,12 @@ public class PowerSUB {
     private DcMotor intakeLock;
     private DcMotorEx shooterR;
     private DcMotorEx shooterL;
+    // 1. Add these two fields near the top of PowerSUB:
     private double targetDistance = 0.0;
+    private double targetEntryAngle = 0.0;
+
+    // 2. Update setPowerByDistance to accept both distance and entry angle:
+
 
 
     public enum gunSTATE {ON, OFF, EXTRA, LITTLE, EXTRALITTLE,DISTANCE_BASED, IDLE}
@@ -32,9 +37,10 @@ public class PowerSUB {
         gunStateVar = gunSTATE.ON;
     }
 
-    public void setPowerByDistance(double distanceInches) {
+    public void setPowerByDistance(double distanceInches, double entryAngleDegrees) {
         gunStateVar = gunSTATE.DISTANCE_BASED;
         this.targetDistance = distanceInches;
+        this.targetEntryAngle = Math.abs(entryAngleDegrees);
     }
 
     public void littlepower() {
@@ -145,9 +151,15 @@ public class PowerSUB {
 
                 // Clamp distance within safe bounds
                 double clampedDist = Math.max(minDistance, Math.min(targetDistance, maxDistance));
-
+                double distanceFactor = minFactor + (clampedDist - minDistance) / (maxDistance - minDistance) * (maxFactor - minFactor);
+                double maxExpectedAngle = 45.0; // Degrees
+                double maxAngleBoost = 0.12;    // Tune this up if angled shots still fall short, or down if they overshoot
                 // Calculate linear scale factor
                 double scaleFactor = minFactor + (clampedDist - minDistance) / (maxDistance - minDistance) * (maxFactor - minFactor);
+                double clampedAngle = Math.min(targetEntryAngle, maxExpectedAngle);
+                double angleBoost = (clampedAngle / maxExpectedAngle) * maxAngleBoost;
+
+                double totalFactor = Math.min(1.0, distanceFactor + angleBoost);
 
                 double targetVelo = scaleFactor * FlyUTIL.highvelo;
                 shooterL.setVelocity(targetVelo);
