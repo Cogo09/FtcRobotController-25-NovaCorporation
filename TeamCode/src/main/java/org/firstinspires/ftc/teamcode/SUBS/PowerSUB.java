@@ -142,26 +142,25 @@ public class PowerSUB {
                 shooterR.setVelocity(0.5 * FlyUTIL.highvelo);
                 break;
             case DISTANCE_BASED:
-                // Map distance to a velocity multiplier factor
-                // Adjust min/max distance and multipliers to match your robot's physical shooting curve!
-                double minDistance = 85.0;  // Inches (closest range)
-                double maxDistance = 112.0; // Inches (farthest range)
-                double minFactor = 0.60;    // 35% velocity at close range
-                double maxFactor = 0.75;    // 85% velocity at max range
+                double minDistance = 85.0;      // Inches (closest range)
+                double maxDistance = 112.0;     // Inches (farthest range)
+                double minFactor = 0.60;        // 60% velocity at 85 in
+                double maxFactor = 0.75;        // 75% velocity at 112 in
+                double maxExpectedAngle = 45.0; // Degrees
+                double maxAngleBoost = 0.12;    // +12% velocity at 45 deg entry angle
 
-                // Clamp distance within safe bounds
+                // 1. Base distance factor (85 in to 112 in)
                 double clampedDist = Math.max(minDistance, Math.min(targetDistance, maxDistance));
                 double distanceFactor = minFactor + (clampedDist - minDistance) / (maxDistance - minDistance) * (maxFactor - minFactor);
-                double maxExpectedAngle = 45.0; // Degrees
-                double maxAngleBoost = 0.12;    // Tune this up if angled shots still fall short, or down if they overshoot
-                // Calculate linear scale factor
-                double scaleFactor = minFactor + (clampedDist - minDistance) / (maxDistance - minDistance) * (maxFactor - minFactor);
+
+                // 2. Backspin compensation boost for angled shots
                 double clampedAngle = Math.min(targetEntryAngle, maxExpectedAngle);
                 double angleBoost = (clampedAngle / maxExpectedAngle) * maxAngleBoost;
 
+                // 3. Apply totalFactor (distanceFactor + angleBoost) to the motors
                 double totalFactor = Math.min(1.0, distanceFactor + angleBoost);
+                double targetVelo = totalFactor * FlyUTIL.highvelo;
 
-                double targetVelo = scaleFactor * FlyUTIL.highvelo;
                 shooterL.setVelocity(targetVelo);
                 shooterR.setVelocity(targetVelo);
                 break;
