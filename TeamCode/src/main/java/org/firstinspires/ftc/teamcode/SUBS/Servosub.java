@@ -20,7 +20,7 @@ public class Servosub {
     private final Servo ramp2;
     private final Servo turretvert;
 
-    public enum VertState {TOP, BOTTOM, IDLE};
+    public enum VertState {TOP, BOTTOM,MID, IDLE};
 
     private VertState VertStateVar = VertState.IDLE;
 
@@ -36,6 +36,9 @@ public class Servosub {
 
     public void setVertBOTTOM() {
         VertStateVar = VertState.BOTTOM;
+    }
+    public void setVertMID(){
+        VertStateVar = VertState.MID;
     }
 
     public void setVertIDLE() {
@@ -93,6 +96,9 @@ public class Servosub {
         switch (VertStateVar) {
             case TOP:
                 setpose(turretvert, SERVOUTIL.turretverttop);
+                break;
+            case MID:
+                setpose(turretvert,SERVOUTIL.turretvertmid);
                 break;
             case BOTTOM:
                 setpose(turretvert, SERVOUTIL.turretvertbottom);

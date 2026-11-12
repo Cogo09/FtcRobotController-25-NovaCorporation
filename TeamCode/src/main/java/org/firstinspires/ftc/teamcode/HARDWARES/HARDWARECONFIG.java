@@ -18,7 +18,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.SUBS.Cluster;
 import org.firstinspires.ftc.teamcode.SUBS.LLcluster;
 import org.firstinspires.ftc.teamcode.SUBS.PowerSUB;
 import org.firstinspires.ftc.teamcode.SUBS.SHOOTERSUB;
@@ -28,8 +27,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.gentrifiedApps.gentrifiedAppsUtil.classes.Scribe;
 import org.gentrifiedApps.gentrifiedAppsUtil.controllers.initMovement.InitMovementController;
-import org.gentrifiedApps.gentrifiedAppsUtil.hardware.voltage.VoltageCompensator;
-import org.gentrifiedApps.gentrifiedAppsUtil.hardware.voltage.VoltageTracker;
 
 public class HARDWARECONFIG {
     LLcluster cluster = new LLcluster();
@@ -62,7 +59,6 @@ public class HARDWARECONFIG {
     double y = 0;
     double indicator = 0;
     public boolean aimbot = false;
-
 
 
     double color = 0;
@@ -124,14 +120,10 @@ public class HARDWARECONFIG {
         cluster.sendToDash();
 
 
-
-
-
 //
 
         elapsedTime = new ElapsedTime();
     }
-
 
 
     public static String currentpose = "currentpose";
@@ -151,6 +143,7 @@ public class HARDWARECONFIG {
     public double getrange() {
         return cluster.getDistance();
     }
+
     public void sendDashboardPacket() {
         TelemetryPacket packet = new TelemetryPacket();
 
@@ -210,9 +203,7 @@ public class HARDWARECONFIG {
         telemetry.addData("Alliance Mode", isRedAlliance ? "RED ALLIANCE" : "BLUE ALLIANCE");
 
 
-
         touchpadwpressed = touchpadpressed;
-
 
 
         // Denominator is the largest motor power (absolute value) or 1
@@ -234,7 +225,6 @@ public class HARDWARECONFIG {
         double armpower = 0;
 
 
-
 //
 //! -0.65, -0.4 0.5, 0.4 FIX
         if (heading >= -0.65 && heading <= -0.4) {
@@ -251,19 +241,19 @@ public class HARDWARECONFIG {
         } else {
             powersub.gunidle();
         }
-        if (opMode.gamepad1.left_trigger >0 ) {
+        if (opMode.gamepad1.left_trigger > 0) {
             servos.setRampUP();
         }
-        if (opMode.gamepad1.right_trigger>0) {
+        if (opMode.gamepad1.right_trigger > 0) {
             servos.setRampDOWN();
         }
         if (opMode.gamepad2.right_bumper) {
             powersub.allon();
-        } else if (opMode.gamepad1.right_bumper){
+        } else if (opMode.gamepad1.right_bumper) {
             powersub.fronton();
-        } else if (opMode.gamepad1.left_bumper){
+        } else if (opMode.gamepad1.left_bumper) {
             powersub.intakereverse();
-        }else {
+        } else {
             powersub.intakeidle();
         }
 //        if (opMode.gamepad1.dpad_up) {
@@ -288,7 +278,6 @@ public class HARDWARECONFIG {
         if (opMode.gamepad2.x) {
             servos.setVertBOTTOM();
         }
-
 
 
 //        if (opMode.gamepad1.left_stick_button){
@@ -332,30 +321,26 @@ public class HARDWARECONFIG {
 
                 // A. Horizontal Turret Tracking
                 double tagBearing = cluster.getAllianceBearing(isRedAlliance);
-                if (Math.abs(tagBearing) > 1.5) {
-                    double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.7);
+                if (Math.abs(tagBearing) > 0.5) {
+                    double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.9);//0.7
                     shootersub.shootlock(newTarget);
                 }
 
                 // B. Distance-Based Hood Servo Adjustment
                 double currentDist = cluster.getAllianceDistance(isRedAlliance);
 
-                if (currentDist >= 140) {
+                if (currentDist >= 100) {
                     servos.setVertBOTTOM();
-                } else if (currentDist >= 120) {
-                    servos.setVertX(0.0);
-                } else if (currentDist >= 100) {
-                    servos.setVertX(0.0);
+                } else if (currentDist >= 90) {
+                    servos.setVertBOTTOM();
                 } else if (currentDist >= 80) {
-                    servos.setVertX(0.0);
-                } else if (currentDist >= 60) {
-                    servos.setVertX(0.0);
-                } else if (currentDist >= 40) {
-                    servos.setVertX(0.0);
-                } else if (currentDist >= 20) {
-                    servos.setVertX(0.0);
-                } else if (currentDist > 0) {
-                    servos.setVertX(0.0);
+                    servos.setVertMID();
+                }
+
+                if (opMode.gamepad2.right_trigger > 0) {
+                    powersub.setPowerByDistance(currentDist); // Scales power based on Limelight distance
+                } else {
+                    powersub.gunidle(); // Turns off/idles the flywheels when you let go
                 }
             }
         }

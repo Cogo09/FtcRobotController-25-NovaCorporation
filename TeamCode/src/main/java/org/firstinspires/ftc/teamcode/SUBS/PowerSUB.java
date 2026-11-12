@@ -20,15 +20,21 @@ public class PowerSUB {
     private DcMotor intakeLock;
     private DcMotorEx shooterR;
     private DcMotorEx shooterL;
+    private double targetDistance = 0.0;
 
 
-    public enum gunSTATE {ON, OFF, EXTRA, LITTLE, EXTRALITTLE, IDLE}
+    public enum gunSTATE {ON, OFF, EXTRA, LITTLE, EXTRALITTLE,DISTANCE_BASED, IDLE}
 
     //!help
     private PowerSUB.gunSTATE gunStateVar = PowerSUB.gunSTATE.IDLE;
 
     public void power() {
         gunStateVar = gunSTATE.ON;
+    }
+
+    public void setPowerByDistance(double distanceInches) {
+        gunStateVar = gunSTATE.DISTANCE_BASED;
+        this.targetDistance = distanceInches;
     }
 
     public void littlepower() {
@@ -128,6 +134,24 @@ public class PowerSUB {
                 shooterL.setVelocity(0.5 * FlyUTIL.highvelo);
 
                 shooterR.setVelocity(0.5 * FlyUTIL.highvelo);
+                break;
+            case DISTANCE_BASED:
+                // Map distance to a velocity multiplier factor
+                // Adjust min/max distance and multipliers to match your robot's physical shooting curve!
+                double minDistance = 85.0;  // Inches (closest range)
+                double maxDistance = 112.0; // Inches (farthest range)
+                double minFactor = 0.60;    // 35% velocity at close range
+                double maxFactor = 0.75;    // 85% velocity at max range
+
+                // Clamp distance within safe bounds
+                double clampedDist = Math.max(minDistance, Math.min(targetDistance, maxDistance));
+
+                // Calculate linear scale factor
+                double scaleFactor = minFactor + (clampedDist - minDistance) / (maxDistance - minDistance) * (maxFactor - minFactor);
+
+                double targetVelo = scaleFactor * FlyUTIL.highvelo;
+                shooterL.setVelocity(targetVelo);
+                shooterR.setVelocity(targetVelo);
                 break;
             case OFF:
                 shooterL.setVelocity(0.0);
