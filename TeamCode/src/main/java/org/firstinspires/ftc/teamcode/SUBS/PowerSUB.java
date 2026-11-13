@@ -142,12 +142,12 @@ public class PowerSUB {
                 shooterR.setVelocity(0.5 * FlyUTIL.highvelo);
                 break;
             case DISTANCE_BASED:
-                double minDistance = 85.0;      // Inches (closest range)
-                double maxDistance = 112.0;     // Inches (farthest range)
-                double minFactor = 0.60;        // 60% velocity at 85 in
-                double maxFactor = 0.75;        // 75% velocity at 112 in
+                double minDistance = 80.0;      // Inches (closest range)
+                double maxDistance = 146.0;     // Inches (farthest range)
+                double minFactor = 0.71;        // 60% velocity at 85 in
+                double maxFactor = 1.20;        // 75% velocity at 112 in
                 double maxExpectedAngle = 45.0; // Degrees
-                double maxAngleBoost = 0.12;    // +12% velocity at 45 deg entry angle
+                double maxAngleBoost = 0.04;    // +12% velocity at 45 deg entry angle
 
                 // 1. Base distance factor (85 in to 112 in)
                 double clampedDist = Math.max(minDistance, Math.min(targetDistance, maxDistance));

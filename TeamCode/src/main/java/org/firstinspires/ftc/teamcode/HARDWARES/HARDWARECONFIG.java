@@ -321,7 +321,7 @@ public class HARDWARECONFIG {
 
                 // A. Horizontal Turret Tracking
                 double tagBearing = cluster.getAllianceBearing(isRedAlliance);
-                if (Math.abs(tagBearing) > 0.5) {
+                if (Math.abs(tagBearing) > 0.0) {
                     double newTarget = shootersub.getcurrentPosition() - (tagBearing * 0.9);//0.7
                     shootersub.shootlock(newTarget);
                 }
