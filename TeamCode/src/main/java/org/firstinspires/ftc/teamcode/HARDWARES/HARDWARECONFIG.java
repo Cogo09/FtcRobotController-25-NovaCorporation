@@ -253,7 +253,9 @@ public class HARDWARECONFIG {
             powersub.fronton();
         } else if (opMode.gamepad1.left_bumper) {
             powersub.intakereverse();
-        } else {
+        } else if (opMode.gamepad2.left_bumper) {
+            powersub.intakereverse();
+        }else {
             powersub.intakeidle();
         }
 //        if (opMode.gamepad1.dpad_up) {

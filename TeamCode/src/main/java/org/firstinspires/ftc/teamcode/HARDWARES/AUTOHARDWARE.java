@@ -103,7 +103,7 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
                 new SequentialAction(
                         new SequentialAction(
                                 drive.actionBuilder(new Pose2d(-56, 60, Math.toRadians(270)))
-                                        .splineToLinearHeading(new Pose2d(-60, 8, Math.toRadians(0)), Math.toRadians(270))
+                                        .splineToLinearHeading(new Pose2d(-60, 8, Math.toRadians(0)), Math.toRadians(290))
                                         .build(),
                                 endAction()
                                 //!SHOT^^^
@@ -122,6 +122,7 @@ public class AUTOHARDWARE extends HARDWARECONFIG {
 
                         ),
                         new SequentialAction(
+
                                 drive.actionBuilder(new Pose2d(60, 10, Math.toRadians(180)))
                                         .lineToX(50)
                                         .splineToLinearHeading(new Pose2d(45, 60, Math.toRadians(270)), Math.toRadians(0))
